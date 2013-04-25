@@ -1,0 +1,16 @@
+application: smart-closet
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: no
+
+handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+
+- url: /.*
+  script: main.py
+libraries:
+
+- name: webapp2
+  version: "2.5.2"
