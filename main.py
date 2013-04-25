@@ -13,19 +13,43 @@ class Greeting(db.Model):
     content = db.StringProperty(multiline=True)
     date = db.DateTimeProperty(auto_now_add=True)
 
+class Clothing(db.Model):
+    type = db.StringProperty(multiline=False) #shirt, pants, shoes, socks, hats, etc
+    color = db.StringProperty(multiline=False)
+
+class Account(db.Model):
+    first = db.StringProperty()
+    last = db.StringProperty()
+    user = db.UserProperty()
+
+
 class MainPage(webapp.RequestHandler):
     def get(self):
         greetings_query = Greeting.all().order('-date')
         greetings = greetings_query.fetch(10)
 
-        if users.get_current_user():
+        user = users.get_current_user()
+        if user:
             url = users.create_logout_url(self.request.uri)
             url_linktext = 'Logout'
+            loggedin = True
+            
+            pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
+            account = pquery.get()  # gets the first one that matched
+            if not account:   # no account exists yet for this user
+                account = Account()
+                account.user = user
+                account.first = user.nickname()  # or some other default value like ' '
+                account.last = user.nickname()
+                account.put()
+
         else:
             url = users.create_login_url(self.request.uri)
             url_linktext = 'Login'
+            loggedin = False
 
         template_values = {
+            'loggedin': loggedin,
             'greetings': greetings,
             'url': url,
             'url_linktext': url_linktext,
@@ -33,6 +57,7 @@ class MainPage(webapp.RequestHandler):
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
+
 
 class Guestbook(webapp.RequestHandler):
     def post(self):
@@ -46,9 +71,9 @@ class Guestbook(webapp.RequestHandler):
         self.redirect('/')
 
 application = webapp.WSGIApplication(
-                                     [('/', MainPage),
-                                      ('/sign', Guestbook)],
-                                     debug=True)
+    [('/', MainPage),
+     ('/sign', Guestbook)],
+    debug=True)
 
 def main():
     run_wsgi_app(application)
