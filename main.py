@@ -66,18 +66,6 @@ class MainPage(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-class Guestbook(webapp.RequestHandler):
-    def post(self):
-        greeting = Greeting()
-
-        if users.get_current_user():
-            greeting.author = users.get_current_user()
-
-        greeting.content = self.request.get('content')
-        greeting.put()
-        self.redirect('/')
-
-
 class Clothes(webapp.RequestHandler):
     def post(self):
         clothing = Clothing()
@@ -91,7 +79,6 @@ class Clothes(webapp.RequestHandler):
 
 application = webapp.WSGIApplication(
     [('/', MainPage),
-     ('/sign', Guestbook),
      ('/cloth', Clothes)],
     debug=True)
 
