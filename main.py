@@ -16,6 +16,7 @@ class Greeting(db.Model):
 class Clothing(db.Model):
     type = db.StringProperty(multiline=False) #shirt, pants, shoes, socks, hats, etc
     color = db.StringProperty(multiline=False)
+    user = db.UserProperty()
 
 class Account(db.Model):
     first = db.StringProperty()
@@ -28,11 +29,16 @@ class MainPage(webapp.RequestHandler):
         greetings_query = Greeting.all().order('-date')
         greetings = greetings_query.fetch(10)
 
+        clothes = Clothing.all().order('-user')
+
         user = users.get_current_user()
         if user:
             url = users.create_logout_url(self.request.uri)
             url_linktext = 'Logout'
             loggedin = True
+
+            clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
+            clothes = clothes_query.fetch(10)
             
             pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
             account = pquery.get()  # gets the first one that matched
@@ -50,6 +56,7 @@ class MainPage(webapp.RequestHandler):
 
         template_values = {
             'loggedin': loggedin,
+            'clothes': clothes,
             'greetings': greetings,
             'url': url,
             'url_linktext': url_linktext,
@@ -70,9 +77,22 @@ class Guestbook(webapp.RequestHandler):
         greeting.put()
         self.redirect('/')
 
+
+class Clothes(webapp.RequestHandler):
+    def post(self):
+        clothing = Clothing()
+
+        clothing.user = users.get_current_user()
+
+        clothing.type = self.request.get('type')
+        clothing.color = self.request.get('color')
+        clothing.put()
+        self.redirect('/')
+
 application = webapp.WSGIApplication(
     [('/', MainPage),
-     ('/sign', Guestbook)],
+     ('/sign', Guestbook),
+     ('/cloth', Clothes)],
     debug=True)
 
 def main():

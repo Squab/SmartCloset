@@ -5,19 +5,39 @@
   </head>
   <body>
     {% if loggedin %}
-      {% for greeting in greetings %}
+      <!--{% for greeting in greetings %}
         {% if greeting.author %}
           <b>{{ greeting.author.nickname }}</b> wrote:
         {% else %}
           An anonymous person wrote:
         {% endif %}
         <blockquote>{{ greeting.content|escape }}</blockquote>
-      {% endfor %}
+      {% endfor %} -->
       
-      <form action="/sign" method="post">
+<!---      <form action="/sign" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Sign Guestbook"></div>
-      </form>
+      </form> -->
+      List of your clothes: <br>
+      {% for cloth in clothes %}
+       <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
+        <b>Type:</b> {{ cloth.type }}<br>
+        <b>Color:</b> {{ cloth.color }}<br><br>
+      {% endfor %}
+
+      <form action="/cloth" method="post">
+      Type of clothing item:<br>
+      <input type="radio" name="type" value="shirt">Shirt<br>
+      <input type="radio" name="type" value="pants">Pants<br>
+      <input type="radio" name="type" value="shoes">Shoes<br>
+      <input type="radio" name="type" value="hat">Hat<br>
+      Color of clothing item:<br>
+      <input type="radio" name="color" value="red">Red<br>
+      <input type="radio" name="color" value="blue">Blue<br>
+      <input type="radio" name="color" value="green">Green<br>
+      <input type="radio" name="color" value="black">Black<br>
+      <div><input type="submit" value="Add"></div>
+      </form> 
 
 
       <a href="{{ url }}">{{ url_linktext }}</a>
