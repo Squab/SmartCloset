@@ -5,25 +5,66 @@
   </head>
   <body>
     {% if loggedin %}
-      List of your clothes: <br>
+      List of your clothes: <br />
       {% for cloth in clothes %}
        <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
-        <b>Type:</b> {{ cloth.type }}<br>
-        <b>Color:</b> {{ cloth.color }}<br><br>
+        <b>Name:</b> {{ cloth.name }}<br />
+        Type: {{ cloth.cat }}<br />
+        Weight: {{ cloth.weight }}<br />
+        Layers: {{ cloth.layers }}<br />
+	{{ cloth.options }} <br />
+        <br />
       {% endfor %}
 
       <form action="/cloth" method="post">
-      Type of clothing item:<br>
-      <input type="radio" name="type" value="shirt">Shirt<br>
-      <input type="radio" name="type" value="pants">Pants<br>
-      <input type="radio" name="type" value="shoes">Shoes<br>
-      <input type="radio" name="type" value="hat">Hat<br>
-      Color of clothing item:<br>
-      <input type="radio" name="color" value="red">Red<br>
-      <input type="radio" name="color" value="blue">Blue<br>
-      <input type="radio" name="color" value="green">Green<br>
-      <input type="radio" name="color" value="black">Black<br>
-      <div><input type="submit" value="Add"></div>
+
+         Clothing Name: <input type="text" name="name" name="clothingname"><br />
+         For example: Green UTCS Shirt, Blue jeans with the hole in the right knee <br /><br />
+         Info: <br />
+         &nbsp;&nbsp;&nbsp;&nbsp; What type of clothing is it? <br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <select name="cat">
+            <option value="belt">Belt</option>
+            <option value="dress">Dress</option>
+            <option value="hat">Hat</option>
+            <option value="jacket">Jacket</option>
+            <option value="pants">Pants</option>
+            <option value="shoes">Shoes</option>
+            <option value="socks">Socks</option>
+            <option value="sunglasses">Sunglasses</option>
+            <option value="sweater">Sweater</option>
+            <option value="swimwear">Swimwear</option>
+            <option value="top">Top</option>
+            <option value="umbrella">Umbrella</option>
+         </select> <br /><br />
+         &nbsp;&nbsp;&nbsp;&nbsp; How heavy is the article of clothing? How warm is it to wear? <br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <select name="weight">
+            <option value="veryheavy">Very Heavy</option>
+            <option value="heavy">Heavy</option>
+            <option value="medium">Medium</option>
+            <option value="light">Light</option>
+            <option value="verylight">Very Light</option>
+            <option value="na">N/A</option>
+         </select> <br /><br />
+         &nbsp;&nbsp;&nbsp;&nbsp; Does it have any of the following qualities? <br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="options" value="waterproof">Waterproof<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="options" value="windproof">Windproof <br /> 
+         <br />
+         &nbsp;&nbsp;&nbsp;&nbsp; If you were to layer this article, which layer would you wear it on? Select all that apply. <br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="layers" value="lowest">Lowest -- like thermals, underwear, or undershirts<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="layers" value="mid">Middle -- like t-shirts or gym shorts<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="layers" value="top">Top -- like hoodies, sweater, or jackets<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="checkbox" name="layers" value="na">N/A -- like belts, sunglasses, or swimwear<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;
+
+         <div><input type="submit" value="Add"></div>
       </form> 
 
 

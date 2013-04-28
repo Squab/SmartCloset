@@ -14,8 +14,11 @@ class Greeting(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
 
 class Clothing(db.Model):
-    type = db.StringProperty(multiline=False) #shirt, pants, shoes, socks, hats, etc
-    color = db.StringProperty(multiline=False)
+    name = db.StringProperty(multiline=False)
+    cat = db.StringProperty(multiline=False)
+    weight = db.StringProperty(multiline=False)
+    layers = db.StringProperty(multiline=False)
+    options = db.StringProperty(multiline=False)
     user = db.UserProperty()
 
 class Account(db.Model):
@@ -72,8 +75,11 @@ class Clothes(webapp.RequestHandler):
 
         clothing.user = users.get_current_user()
 
-        clothing.type = self.request.get('type')
-        clothing.color = self.request.get('color')
+        clothing.cat = self.request.get('cat')
+        clothing.name = self.request.get('name')
+        clothing.weight = self.request.get('weight')
+        clothing.options = self.request.get('options')
+        clothing.layers = self.request.get('layers')
         clothing.put()
         self.redirect('/')
 
