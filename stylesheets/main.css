@@ -19,11 +19,14 @@ td {
 	padding:10px;
 	text-align:left;
 }
+a:link {color:#D2E5FA;}    /* unvisited link */
+a:visited {color:#69FFFC;} /* visited link */
 body {
 	font-family: 'Maven Pro', sans-serif;	color: white;
 	text-align:center;
 	letter-spacing: 1px;
 	font-weight: 100;
+
 	/* IE10 Consumer Preview */ 
 	background-image: -ms-radial-gradient(center bottom, ellipse farthest-side, #365973 0%, #2F4D63 100%);
 
