@@ -8,11 +8,6 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
-class Greeting(db.Model):
-    author = db.UserProperty()
-    content = db.StringProperty(multiline=True)
-    date = db.DateTimeProperty(auto_now_add=True)
-
 class Clothing(db.Model):
     name = db.StringProperty(multiline=False)
     cat = db.StringProperty(multiline=False)
@@ -29,10 +24,8 @@ class Account(db.Model):
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        greetings_query = Greeting.all().order('-date')
-        greetings = greetings_query.fetch(10)
-
-        clothes = Clothing.all().order('-user')
+        clothes_query = Clothing.all().order('-user')
+        clothes = clothes_query.fetch(10)
 
         user = users.get_current_user()
         if user:
@@ -60,7 +53,6 @@ class MainPage(webapp.RequestHandler):
         template_values = {
             'loggedin': loggedin,
             'clothes': clothes,
-            'greetings': greetings,
             'url': url,
             'url_linktext': url_linktext,
         }

@@ -1,4 +1,45 @@
-body {
-  font-family: Verdana, Helvetica, sans-serif;
-  background-color: #DDDDDD;
+h1 {
+	font-family: 'Muli';
+	color: white;
+	text-align:center;
+	letter-spacing: 1px;
+	font-weight: 100;
+	font-size: 70px;
 }
+table{
+	margin: auto;
+}
+table.inner td{
+	vertical-align: top;
+	padding:0px;
+	text-align:left;
+}
+td {
+	vertical-align: top;
+	padding:10px;
+	text-align:left;
+}
+body {
+	font-family: 'Maven Pro', sans-serif;	color: white;
+	text-align:center;
+	letter-spacing: 1px;
+	font-weight: 100;
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-radial-gradient(center bottom, ellipse farthest-side, #365973 0%, #2F4D63 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-radial-gradient(center bottom, ellipse farthest-side, #365973 0%, #2F4D63 100%);
+
+	/* Opera */ 
+	background-image: -o-radial-gradient(center bottom, ellipse farthest-side, #365973 0%, #2F4D63 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(radial, center bottom, 0, center bottom, 425, color-stop(0, #365973), color-stop(1, #2F4D63));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-radial-gradient(center bottom, ellipse farthest-side, #365973 0%, #2F4D63 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: radial-gradient(ellipse farthest-side at center bottom, #365973 0%, #2F4D63 100%);
+}
+
