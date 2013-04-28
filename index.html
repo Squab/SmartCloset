@@ -16,10 +16,13 @@
                 <b>Name:</b> <font color = #D2E5FA>{{ cloth.name }} </font><br />
                 Type: <font color = #D2E5FA> {{ cloth.cat }} </font><br />
                 Weight: <font color = #D2E5FA> {{ cloth.weight }} </font><br />
-                Layers: <font color = #D2E5FA>{{ cloth.layers }} <br />
-                {{ cloth.options }}</font> <br />
+                Layers: <font color = #D2E5FA>{{ cloth.layers }} </font><br />
+                Other: <font color = #D2E5FA>{{ cloth.options }}</font> <br />
                 <br />
                 {% endfor %}
+                <form action="/empty" method="post">
+                    <div><input type="submit" value="Clear Clothes"></div> 
+                </form>
             </td>
             <td>
             <table class="inner">

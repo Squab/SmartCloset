@@ -61,6 +61,7 @@ class MainPage(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
+
 class Clothes(webapp.RequestHandler):
     def post(self):
         clothing = Clothing()
@@ -75,9 +76,18 @@ class Clothes(webapp.RequestHandler):
         clothing.put()
         self.redirect('/')
 
+class Empty(webapp.RequestHandler):
+    def post(self):
+        user = users.get_current_user()
+        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
+        clothes = clothes_query.fetch(1000)
+        db.delete(clothes)
+        self.redirect('/')
+
 application = webapp.WSGIApplication(
     [('/', MainPage),
-     ('/cloth', Clothes)],
+     ('/cloth', Clothes),
+     ('/empty', Empty)],
     debug=True)
 
 def main():
