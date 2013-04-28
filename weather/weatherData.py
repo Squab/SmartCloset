@@ -1,3 +1,5 @@
+#DO NOT USE:  incomplete implementation, use weatherDataForecast instead
+
 import urllib2
 from xml.dom.minidom import parseString
 def getXML():
