@@ -4,18 +4,25 @@
     <title>Welcome to your closet</title>
   </head>
   <body>
-    List of your clothes: <br />
-    {% for cloth in clothes %}
-     <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
-      <b>Name:</b> {{ cloth.name }}<br />
-      Type: {{ cloth.cat }}<br />
-      Weight: {{ cloth.weight }}<br />
-      Layers: {{ cloth.layers }}<br /> <!-- Doesn't work as expected-->
-      {% if cloth.options %}
-        {{ cloth.options }} <br />
-      {% endif %}
-      <br />
-    {% endfor %}
+    <table>
+      <tr>
+        <td>
+          List of your clothes: </font><br />
+          {% for cloth in clothes %}
+            <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
+            <b>Name:</b> <font color = #D2E5FA>{{ cloth.name }} </font><br />
+            Type: <font color = #D2E5FA> {{ cloth.cat }} </font><br />
+            Weight: <font color = #D2E5FA> {{ cloth.weight }} </font><br />
+            Layers: <font color = #D2E5FA>{{ cloth.layers }} </font><br /> <!-- TODO list all layers -->
+            <font color = #D2E5FA>{{ cloth.options }}</font> <br /> <!-- TODO list all options -->
+            <br />
+          {% endfor %}
+          <form action="/empty" method="post">
+              <div><input type="submit" value="Clear Clothes"></div> 
+          </form>
+        </td>
+      </tr>
+    </table>
     <a href="/">Back</ a><br />
     <a href="{{ url }}">Logout</ a>
   </body>
