@@ -6,7 +6,7 @@
   <body>
     <a href="/closet">View your closet</ a> <br />
     <a href="/addItem">Add a clothing item to your closet</ a><br />
-    <a href="{{ url }}">Logout</ a>
+    <a href="{{ url }}">{{ url_linktext }}</ a>
   </body>
 </html>
 

@@ -22,34 +22,32 @@ class Account(db.Model):
     last = db.StringProperty()
     user = db.UserProperty()
 
+def userHandling(obj):
+    userInfo = collections.namedtuple('userInfo', ['url', 'clothes']) 
+    user = users.get_current_user()
+    url = users.create_logout_url(self.request.uri)
 
-def makeAccount(user):
-    account = Account()
-    account.user = user
-    account.first = user.nickname()  # or some other default value like ' '
-    account.last = user.nickname()
-    account.put()
-    return account
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
+    clothes = clothes_query.fetch(10)
+            
+    pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
+    account = pquery.get()  # gets the first one that matched
+    if not account:   # no account exists yet for this user
+        account = Account()
+        account.user = user
+        account.first = user.nickname()  # or some other default value like ' '
+        account.last = user.nickname()
+        account.put()
+    ret = userInfo(url, clothes)
+
 
 class MainPage(webapp.RequestHandler):
     def get(self):
         clothes = Clothing.all().order('-user')
-
-        user = users.get_current_user()
-        url = users.create_logout_url(self.request.uri)
-
-
-        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(10)
-            
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
-
         template_values = {
             'clothes': clothes,
             'url': url,
+            'url_linktext': url_linktext,
         }
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')
@@ -58,46 +56,24 @@ class MainPage(webapp.RequestHandler):
 
 class ClosetPage(webapp.RequestHandler):
     def get(self):
-        clothes = Clothing.all().order('-user')
-
+	clothes = Clothing.all().order('-user')
         user = users.get_current_user()
-        url = users.create_logout_url(self.request.uri)
-
-
         clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
         clothes = clothes_query.fetch(10)
-            
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
-
         template_values = {
-            'clothes': clothes,
-            'url': url,
+            'clothes': clothes
         }
         path = os.path.join(os.path.dirname(__file__), 'closet.html')
         self.response.out.write(template.render(path, template_values))
 
 class AddItemPage(webapp.RequestHandler):
     def get(self):
-        clothes = Clothing.all().order('-user')
-
+	clothes = Clothing.all().order('-user')
         user = users.get_current_user()
-        url = users.create_logout_url(self.request.uri)
-
-
         clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
         clothes = clothes_query.fetch(10)
-            
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
-
         template_values = {
-            'clothes': clothes,
-            'url': url,
+            'clothes': clothes
         }
         path = os.path.join(os.path.dirname(__file__), 'addItem.html')
         self.response.out.write(template.render(path, template_values))

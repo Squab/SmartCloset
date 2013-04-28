@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <title>Welcome to your closet</title>
+  </head>
+  <body>
+    List of your clothes: <br />
+    {% for cloth in clothes %}
+     <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
+      <b>Name:</b> {{ cloth.name }}<br />
+      Type: {{ cloth.cat }}<br />
+      Weight: {{ cloth.weight }}<br />
+      Layers: {{ cloth.layers }}<br /> <!-- Doesn't work -->
+      {% if cloth.options %}
+        {{ cloth.options }} <br />
+      {% endif %}
+      <br />
+    {% endfor %}
+    <a href="/">Back</ a><br />
+    <a href="{{ url }}">Logout</ a>
+  </body>
+</html>
+
