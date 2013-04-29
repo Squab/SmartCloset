@@ -38,23 +38,18 @@ class MainPage(webapp.RequestHandler):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
 
-
-        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(None)
-            
         pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
         account = pquery.get()  # gets the first one that matched
         if not account:   # no account exists yet for this user
             account = makeAccount(user)
 
-        #w = weatherForecast()
-        #w.getXML()     this is what I tried to do
-        #weather = w.getDayTemp()
+        w = weatherDataForecast()
+        w.getXML()    
+        weather = int(round(w.getCurrentTemp()))
 
         template_values = {
-            'clothes': clothes,
             'url': url,
-            #'weather': weather,
+            'weather': weather,
         }
 
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')

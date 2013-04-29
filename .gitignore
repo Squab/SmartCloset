@@ -1,6 +1,6 @@
 
 .DS_Store
 
-weatherDataForecast.pyc
+*.pyc
 *~
 */*~

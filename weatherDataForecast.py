@@ -1,11 +1,14 @@
 import urllib2
 from xml.dom.minidom import parseString
+import time
 class weatherDataForecast:
 	wdf=''
 	def __init__(self):
 		wdf=''
 		self.getXML()
-	#call getXML() to get the latest weather forecast before making any new decisions
+	#Call getXML() to get the latest weather forecast before making any new decisions.
+	#Returns boolean value False if weather data is not retrieved, run again
+	# in this case.  Returns True otherwise.
 	def getXML(self):
 		city = "Austin" #city needs to be entered upon setup or determined some other way
 		url = "http://api.openweathermap.org/data/2.5/forecast/daily?q="
@@ -14,7 +17,13 @@ class weatherDataForecast:
 		source = urllib2.urlopen(url)
 		#print ('source: ')
 		#print (source)
-		self.wdf = source.read()
+		temp=source.read()
+		if self.isValidXML(temp):
+			self.wdf=temp
+			return True
+		else:
+			print ('Unable to retrieve weather data, results may be outdated')
+			return False
 		#print ('wdf: ' + self.wdf)
 
 	def parseTest(self,tag):
@@ -25,9 +34,33 @@ class weatherDataForecast:
 		#print xmlData
 		return xmlData
 
+	#tests whether string dat is XML weather data, will not work for other data types
+	#It is possible that weatherDataForecast will be instantiated with bad XML 
+	#data, using this function in conjunction with getXML() is recommended to 
+	#avoid failure of weather related functions.
+	def isValidXML(self,dat):
+		index=dat.find('<weatherdata>',0,len(dat))
+		end=dat.find('</weatherdata>',0,len(dat))
+		if index>-1 and end>index:
+			return True
+		else:
+			return False
+
 
 	#print parseTest('temperature')
-	#should return a double (long? float? dunno what Python does here), degrees are in farenheit
+	#should return a double (long? float? dunno what Python does here), degrees
+	# are in farenheit
+	def getCurrentTemp(self):
+		hour=time.localtime()[3]
+		#print hour
+		if 0<hour and hour<=6:
+			return self.getNightTemp()
+		if 6<hour and hour<=12:
+			return self.getMornTemp()
+		if 12<hour and hour<=18:
+			return self.getDayTemp()
+		else:
+			return self.getEveTemp()
 	def getDayTemp(self):
 		tempData=self.parseTest('temperature')
 		index=tempData.find('day',0,len(tempData))+5
