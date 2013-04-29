@@ -155,15 +155,14 @@ class Empty(webapp.RequestHandler):
     def post(self):
         user = users.get_current_user()
         clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(1000)
+        clothes = clothes_query.fetch(None)
         db.delete(clothes)
         self.redirect('/')
 
 class EditPage(webapp.RequestHandler):
-    key = None
     def get(self):
-        self.key = self.request.get('k')
-        article = db.Model.get(self.key)
+        key = self.request.get('k')
+        article = db.Model.get(key)
         cat = article.cat
         name = article.name
         weight = article.weight
@@ -174,7 +173,9 @@ class EditPage(webapp.RequestHandler):
             cat: True,
             weight: True,
             period: True,
-            'edit': "Edit",
+            'edit': 'Edit',
+            'value': '/edit',
+            'key': key,
         }
         for layer in article.layers:
             template_values[layer] = True
@@ -184,7 +185,8 @@ class EditPage(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
     def post(self):
-        clothing = db.get(self.key)
+        key = self.request.get('key')
+        clothing = db.get(key)
         clothing.user = users.get_current_user()
         clothing.cat = self.request.get('cat')
         clothing.name = self.request.get('name')

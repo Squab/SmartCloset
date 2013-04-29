@@ -7,7 +7,7 @@
 <body>
 	<table>
 		<tr><td>
-			<form action="/cloth" method="post">
+			<form action={{ value|default:"/cloth" }} method="post">
 				Clothing Name: <input type="text" name="name" name="clothingname" {% if name %} value={{ name }} {% endif %}><br />
 				<font color = #D2E5FA>For example: Green UTCS Shirt, Blue jeans with the hole in the right knee </font><br /><br />
 				Info: <br />
@@ -65,11 +65,12 @@
 						<option value="10" {% if ten %} selected {% endif %}>Ten Times</option>
 						<option value="20" {% if twenty %} selected {% endif %}>Twenty Times</option>
 						<option value="30" {% if thirty %} selected {% endif %}>Thirty times</option>
-						<option value="100" {% if onehundred %} selected {% endif %}>One HUndred Times</option>
+						<option value="100" {% if onehundred %} selected {% endif %}>One Hundred Times</option>
 						<option value="200" {% if twohundred %} selected {% endif %}>Two Hundred Times</option>
 						<option value="-1" {% if negativeone %} selected {% endif %}>N/A</option>
 					</select> <br /><br />
-					<div><input type="submit" value="Add"></div>
+                                        {% if key %}<input type="hidden" name="key" value={{ key }}>{% endif %}
+					<div><input type="submit" value={{ edit|default:"Add" }}></div>
 				</form> 
 			</table>
 			<a href="/">Home</ a><br />
