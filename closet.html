@@ -14,15 +14,15 @@
             <tr>
             <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
 
-            <td><b>Name:</b> <font color = #D2E5FA>{{ cloth.name }} </font></td>
-            <td>Type: <font color = #D2E5FA> {{ cloth.cat }} </font></td>
-            <td>Weight: <font color = #D2E5FA> {{ cloth.weight }} </font></td>
-            <td>Layers: <font color = #D2E5FA> 
+            <td><font color = #D2E5FA>{{ cloth.name }} </font></td>
+            <td><font color = #D2E5FA> {{ cloth.cat }} </font></td>
+            <td><font color = #D2E5FA> {{ cloth.weight }} </font></td>
+            <td><font color = #D2E5FA> 
             {% for layer in cloth.layers %}
               {{ layer }}&nbsp;
             {% endfor %} </font></td>
-            <font color = #D2E5FA>
-            <td>{% for option in cloth.options %}
+            <td><font color = #D2E5FA>
+            {% for option in cloth.options %}
               {{ option }}
             {% endfor %}</font></td>
             <br />
