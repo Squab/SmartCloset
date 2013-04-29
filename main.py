@@ -45,11 +45,13 @@ class MainPage(webapp.RequestHandler):
 
         w = weatherDataForecast()
         w.getXML()    
-        weather = int(round(w.getCurrentTemp()))
+        currentTemp = int(round(w.getCurrentTemp()))
+        wind = int(round(w.getWindSpeed()))
 
         template_values = {
             'url': url,
-            'weather': weather,
+            'currentTemp': currentTemp,
+            'wind': wind,
         }
 
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
@@ -101,6 +103,40 @@ class AddItemPage(webapp.RequestHandler):
             'url': url,
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/addItem.html')
+<<<<<<< HEAD
+=======
+        self.response.out.write(template.render(path, template_values))
+
+
+class WeatherPage(webapp.RequestHandler):
+    def get(self):
+        user = users.get_current_user()
+        url = users.create_logout_url(self.request.uri)    
+        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
+        account = pquery.get()  # gets the first one that matched
+        if not account:   # no account exists yet for this user
+            account = makeAccount(user)
+
+        w = weatherDataForecast()
+        w.getXML()    
+        temp = int(round(w.getCurrentTemp()))
+        maxtemp = int(round(w.getMaxTemp()))
+        mintemp = int(round(w.getMinTemp()))
+        wind = int(round(w.getWindSpeed()))
+        humid = int(round(w.getHumidity()))
+        rain = w.getHumidity()
+
+        template_values = {
+            'temp': temp,
+            'maxTemp' : maxtemp,
+            'minTemp' : mintemp,
+            'wind' : wind,
+            'humid' : humid,
+            'rain' : rain, 
+            'url': url,
+        }
+        path = os.path.join(os.path.dirname(__file__), 'weather.html')
+>>>>>>> Adding weather html page
         self.response.out.write(template.render(path, template_values))
 
 
@@ -169,6 +205,10 @@ application = webapp.WSGIApplication(
      ('/closet', ClosetPage),
      ('/addItem', AddItemPage),
      ('/empty', Empty),
+<<<<<<< HEAD
+=======
+     ('/weather', WeatherPage),
+>>>>>>> Adding weather html page
      ('/edit', EditPage)],
     debug=True)
 

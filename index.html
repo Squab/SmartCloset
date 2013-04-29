@@ -6,10 +6,16 @@
 </head>
 <h1>Welcome to your Smart Closet</h1>
 <body>
-  <a href="/closet">View Your Closet</a><br />
-  <a href="/addItem">Add an item to Your Closet</a><br />
-  <a href="{{ url }}">Logout</a>
-<br> The temp right now is: {{ weather }} 
+    It is currently {{ currentTemp }}°F with a wind speed of {{ wind }} mph. 
+    <br /><br /><br />
+
+
+
+    <a href="/closet">View Your Closet</a><br />
+    <a href="/addItem">Add an item to Your Closet</a><br />
+    <a href="/weather">Check the Weather</a><br />
+    <a href="{{ url }}">Logout</a>
+
 
 </body>
 </html>

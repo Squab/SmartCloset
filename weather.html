@@ -1,0 +1,68 @@
+<html>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Maven+Pro|Muli' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <title>Welcome to the Smart Closet</title>
+</head>
+<h1>The Weather</h1>
+<body>
+	<table border = 0>
+		<tr>
+			<td>
+    			 <p style="font-size:300px">{{ temp }}°</p>
+    		</td>
+    		<td>
+    			<br /><br /><br /><br />
+    			<table>
+    				<tr>
+    					<td>
+    						High 
+    					</td>
+    					<td>
+    						Low 
+    					</td>
+    					<td>
+    						Humidity 
+    					</td>
+    					<td>
+    						Wind 
+    					</td>
+    				</tr>
+    				<tr>
+    					<td>
+    						{{ maxTemp }}° 
+    					</td>
+    					<td>
+    						{{ minTemp }}° 
+    					</td>
+    					<td>
+    						{{ humid }}% 
+    					</td>
+    					<td>
+    						{{ wind }} mph 
+    					</td>
+    				</tr>
+    			</table>
+    			<table>	
+    				<tr>
+    					<td>
+    						{% if rain == 0 %}
+    							<p style="font-size:30px">It's not going to rain today!</p>
+    						{% else %}
+    							<p style="font-size:30px">It's going to rain today!</p>
+    						{% endif %}
+    					</td>
+    				</tr>
+    			</table>
+    		</td>
+    	</tr>
+    </table>
+
+
+
+    <br /><br /><br />
+  <a href="/closet">View Your Closet</a><br />
+  <a href="/addItem">Add an item to Your Closet</a><br />
+  <a href="{{ url }}">Logout</a>
+</body>
+</html>

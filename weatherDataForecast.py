@@ -61,6 +61,7 @@ class weatherDataForecast:
 			return self.getDayTemp()
 		else:
 			return self.getEveTemp()
+
 	def getDayTemp(self):
 		tempData=self.parseTest('temperature')
 		index=tempData.find('day',0,len(tempData))+5
@@ -127,7 +128,6 @@ class weatherDataForecast:
 		ret=float(windData[index:end])
 		return ret
 	#print getWindSpeed()
-	#should return either 0,1,or 2 as a measure of predicted rain severity for next 3 hours
 	#print parseTest('precipitation')
 	def getRainSeverity(self):
 		rainData=self.parseTest('precipitation')

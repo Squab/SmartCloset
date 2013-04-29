@@ -5,9 +5,12 @@ h1 {
 	letter-spacing: 1px;
 	font-weight: 100;
 	font-size: 70px;
+	margin: auto;
 }
 table{
+	vertical-align: top;
 	margin: auto;
+	border-collapse:collapse;
 }
 table.inner td{
 	vertical-align: top;
@@ -19,6 +22,7 @@ td {
 	padding:10px;
 	text-align:left;
 }
+p { margin:0 }
 a:link {color:#D2E5FA;}    /* unvisited link */
 a:visited {color:#69FFFC;} /* visited link */
 body {
