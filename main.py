@@ -13,8 +13,9 @@ class Clothing(db.Model):
     name = db.StringProperty(multiline=False)
     cat = db.StringProperty(multiline=False)
     weight = db.StringProperty(multiline=False)
-    layers = db.StringProperty(multiline=False)
-    options = db.StringProperty(multiline=False)
+    layers = db.StringListProperty()
+    options = db.StringListProperty()
+    period = db.IntegerProperty()
     user = db.UserProperty()
 
 class Account(db.Model):
@@ -33,15 +34,12 @@ def makeAccount(user):
 
 class MainPage(webapp.RequestHandler):
     def get(self):
-        clothes_query = Clothing.all().order('-user')
-        clothes = clothes_query.fetch(10)
-
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
 
 
         clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(10)
+        clothes = clothes_query.fetch(None)
             
         pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
         account = pquery.get()  # gets the first one that matched
@@ -66,7 +64,7 @@ class ClosetPage(webapp.RequestHandler):
 
 
         clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(10)
+        clothes = clothes_query.fetch(None)
             
         pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
         account = pquery.get()  # gets the first one that matched
@@ -89,7 +87,7 @@ class AddItemPage(webapp.RequestHandler):
 
 
         clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(10)
+        clothes = clothes_query.fetch(None)
             
         pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
         account = pquery.get()  # gets the first one that matched
@@ -107,14 +105,13 @@ class AddItemPage(webapp.RequestHandler):
 class Clothes(webapp.RequestHandler):
     def post(self):
         clothing = Clothing()
-
         clothing.user = users.get_current_user()
-
         clothing.cat = self.request.get('cat')
         clothing.name = self.request.get('name')
         clothing.weight = self.request.get('weight')
-        clothing.options = self.request.get('options')
-        clothing.layers = self.request.get('layers')
+        clothing.options = self.request.get_all('options')
+        clothing.layers = self.request.get_all('layers')
+        clothing.period = int(self.request.get('period'))
         clothing.put()
         self.redirect('/')
    

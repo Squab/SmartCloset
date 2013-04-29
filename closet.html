@@ -13,16 +13,23 @@
             <b>Name:</b> <font color = #D2E5FA>{{ cloth.name }} </font><br />
             Type: <font color = #D2E5FA> {{ cloth.cat }} </font><br />
             Weight: <font color = #D2E5FA> {{ cloth.weight }} </font><br />
-            Layers: <font color = #D2E5FA>{{ cloth.layers }} </font><br /> <!-- TODO list all layers -->
-            <font color = #D2E5FA>{{ cloth.options }}</font> <br /> <!-- TODO list all options -->
+            Layers: <font color = #D2E5FA> 
+            {% for layer in cloth.layers %}
+              {{ layer }}&nbsp;
+            {% endfor %} </font><br /> 
+            <font color = #D2E5FA>
+            {% for option in cloth.options %}
+              {{ option }}
+            {% endfor %}</font> <br />
             <br />
           {% endfor %}
           <form action="/empty" method="post">
-              <div><input type="submit" value="Clear Clothes"></div> 
+              <div><input type="submit" value="Remove all from closet"></div> 
           </form>
         </td>
       </tr>
     </table>
+    <a href="/addItem">Add and item to Your Closet</ a><br />
     <a href="/">Back</ a><br />
     <a href="{{ url }}">Logout</ a>
   </body>
