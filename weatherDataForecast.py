@@ -1,5 +1,6 @@
 import urllib2
 from xml.dom.minidom import parseString
+import time
 class weatherDataForecast:
 	wdf=''
 	def __init__(self):
@@ -49,6 +50,17 @@ class weatherDataForecast:
 	#print parseTest('temperature')
 	#should return a double (long? float? dunno what Python does here), degrees
 	# are in farenheit
+	def getCurrentTemp(self):
+		hour=time.localtime()[3]
+		#print hour
+		if 0<hour and hour<=6:
+			return self.getNightTemp()
+		if 6<hour and hour<=12:
+			return self.getMornTemp()
+		if 12<hour and hour<=18:
+			return self.getDayTemp()
+		else:
+			return self.getEveTemp()
 	def getDayTemp(self):
 		tempData=self.parseTest('temperature')
 		index=tempData.find('day',0,len(tempData))+5

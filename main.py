@@ -45,7 +45,7 @@ class MainPage(webapp.RequestHandler):
 
         w = weatherDataForecast()
         w.getXML()    
-        weather = int(round(w.getDayTemp()))
+        weather = int(round(w.getCurrentTemp()))
 
         template_values = {
             'url': url,
