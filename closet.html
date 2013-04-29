@@ -1,26 +1,30 @@
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link href='http://fonts.googleapis.com/css?family=Maven+Pro|Muli' rel='stylesheet' type='text/css'>
     <title>Welcome to your closet</title>
   </head>
   <body>
-    <table>
+    <h1> Closet Contents</h1>
+    <table border = 1>
       <tr>
-        <td>
-          List of your clothes: </font><br />
+        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td>
+      </tr>
           {% for cloth in clothes %}
+            <tr>
             <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
-            <b>Name:</b> <font color = #D2E5FA>{{ cloth.name }} </font><br />
-            Type: <font color = #D2E5FA> {{ cloth.cat }} </font><br />
-            Weight: <font color = #D2E5FA> {{ cloth.weight }} </font><br />
-            Layers: <font color = #D2E5FA> 
+
+            <td><b>Name:</b> <font color = #D2E5FA>{{ cloth.name }} </font></td>
+            <td>Type: <font color = #D2E5FA> {{ cloth.cat }} </font></td>
+            <td>Weight: <font color = #D2E5FA> {{ cloth.weight }} </font></td>
+            <td>Layers: <font color = #D2E5FA> 
             {% for layer in cloth.layers %}
               {{ layer }}&nbsp;
-            {% endfor %} </font><br /> 
+            {% endfor %} </font></td>
             <font color = #D2E5FA>
-            {% for option in cloth.options %}
+            <td>{% for option in cloth.options %}
               {{ option }}
-            {% endfor %}</font> <br />
+            {% endfor %}</font></td>
             <br />
           {% endfor %}
           <form action="/empty" method="post">
@@ -30,6 +34,7 @@
       </tr>
     </table>
     <a href="/addItem">Add and item to Your Closet</ a><br />
+
     <a href="/">Back</ a><br />
     <a href="{{ url }}">Logout</ a>
   </body>

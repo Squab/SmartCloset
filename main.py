@@ -1,7 +1,8 @@
 import cgi
 import collections
-
 import os
+
+from weatherDataForecast import weatherForecast
 from google.appengine.ext.webapp import template
 
 from google.appengine.api import users
@@ -46,9 +47,14 @@ class MainPage(webapp.RequestHandler):
         if not account:   # no account exists yet for this user
             account = makeAccount(user)
 
+        #w = weatherForecast()
+        #w.getXML()     this is what I tried to do
+        #weather = w.getDayTemp()
+
         template_values = {
             'clothes': clothes,
             'url': url,
+            #'weather': weather,
         }
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')
