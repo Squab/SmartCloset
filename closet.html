@@ -27,13 +27,13 @@
             {% endfor %}</font></td>
             <br />
           {% endfor %}
-          <form action="/empty" method="post">
-              <div><input type="submit" value="Remove all from closet"></div> 
-          </form>
         </td>
       </tr>
     </table>
-    <a href="/addItem">Add and item to Your Closet</ a><br />
+    <form action="/empty" method="post">
+              <div><input type="submit" value="Remove all from closet"></div> 
+          </form>
+    <a href="/addItem">Add an item to Your Closet</ a><br />
 
     <a href="/">Back</ a><br />
     <a href="{{ url }}">Logout</ a>
