@@ -8,7 +8,7 @@
 	<table>
 		<tr><td>
 			<form action={{ value|default:"/cloth" }} method="post">
-				Clothing Name: <input type="text" name="name" name="clothingname" {% if name %} value={{ name }} {% endif %}><br />
+				Clothing Name: <input type="text" name="name" {% if name %} value={{ name }} {% endif %}><br />
 				<font color = #D2E5FA>For example: Green UTCS Shirt, Blue jeans with the hole in the right knee </font><br /><br />
 				Info: <br />
 				&nbsp;&nbsp;&nbsp;&nbsp;What type of clothing is it? <br />

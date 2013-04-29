@@ -1,0 +1,32 @@
+<html>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Maven+Pro|Muli' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <title>Set your preferences</title>
+</head>
+<h1>Preferences</h1>
+<body>
+    <form action="/prefs" method="post">
+        Set your clothing weight preferences (please note, theses values can overlap):<br /><br />
+        What weather would you wear "very heavy" clothing in? <br />
+        <input type="text" name="veryheavy_max" placeholder="Max Temperature"><br />
+        <input type="text" name="veryheavy_min" placeholder="Min Temperature"><br /><br />
+        What weather would you wear "heavy" clothing in? <br />
+        <input type="text" name="heavy_max" placeholder="Max Temperature"><br />
+        <input type="text" name="heavy_min" placeholder="Min Temperature"><br /><br />
+        What weather would you wear "medium" clothing in? <br />
+        <input type="text" name="medium_max" placeholder="Max Temperature"><br />
+        <input type="text" name="medium_min" placeholder="Min Temperature"><br /><br />
+        What weather would you wear "light" clothing in? <br />
+        <input type="text" name="light_max" placeholder="Max Temperature"><br />
+        <input type="text" name="light_min" placeholder="Min Temperature"><br /><br />
+        What weather would you wear "very light" clothing in? <br />
+        <input type="text" name="verylight_max" placeholder="Max Temperature"><br />
+        <input type="text" name="verylight_min" placeholder="Min Temperature"><br /><br />
+        <input type="submit" value="Save Preferences"><br /><br />
+
+    <a href="/">Home</a><br />
+    <a href="{{ url }}">Logout</a>
+</body>
+</html>
+

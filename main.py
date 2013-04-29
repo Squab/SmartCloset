@@ -23,6 +23,19 @@ class Account(db.Model):
     first = db.StringProperty()
     last = db.StringProperty()
     user = db.UserProperty()
+    prefs = db.StringProperty()
+
+class Preferences(db.Model):
+    veryheavy_max = db.IntegerProperty()
+    veryheavy_min = db.IntegerProperty()
+    heavy_max = db.IntegerProperty()
+    heavy_min = db.IntegerProperty()
+    medium_max = db.IntegerProperty()
+    medium_min = db.IntegerProperty()
+    light_max = db.IntegerProperty()
+    light_min = db.IntegerProperty()
+    verylight_max = db.IntegerProperty()
+    verylight_min = db.IntegerProperty()
 
 
 def makeAccount(user):
@@ -30,6 +43,9 @@ def makeAccount(user):
     account.user = user
     account.first = user.nickname()  # or some other default value like ' '
     account.last = user.nickname()
+    prefs = Preferences()
+    prefs.put()
+    account.prefs = prefs.key()
     account.put()
     return account
 
@@ -73,11 +89,9 @@ class ClosetPage(webapp.RequestHandler):
         account = pquery.get()  # gets the first one that matched
         if not account:   # no account exists yet for this user
             account = makeAccount(user)
-        closet = ""
         template_values = {
             'clothes': clothes,
             'url': url,
-            'closet': closet,
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/closet.html')
         self.response.out.write(template.render(path, template_values))
@@ -197,6 +211,47 @@ class EditPage(webapp.RequestHandler):
         clothing.put()
         self.redirect('/')
 
+class PrefPage(webapp.RequestHandler):
+    def get(self):
+        clothes = Clothing.all().order('-user')
+
+        user = users.get_current_user()
+        url = users.create_logout_url(self.request.uri)
+
+
+        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
+        clothes = clothes_query.fetch(None)
+            
+        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
+        account = pquery.get()  # gets the first one that matched
+        if not account:   # no account exists yet for this user
+            account = makeAccount(user)
+        template_values = {
+            'clothes': clothes,
+            'url': url,
+        }
+        path = os.path.join(os.path.dirname(__file__), 'Templates/prefs.html')
+        self.response.out.write(template.render(path, template_values))
+
+    def post(self):
+        user = users.get_current_user()
+        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
+        account = pquery.get()  #TODO this doesn't work, we need some other way of getting the user's
+        prefs = db.Model.get(account.prefs)
+        prefs.veryheavy_max = self.request.get('veryheavy_max')
+        prefs.veryheavy_min = self.request.get('veryheavy_min')
+        prefs.heavy_max = self.request.get('heavy_max')
+        prefs.heavy_min = self.request.get('heavy_max')
+        prefs.medium_max = self.request.get('medium_max')
+        prefs.medium_min = self.request.get('medium_max')
+        prefs.light_max = self.request.get('light_max')
+        prefs.light_min = self.request.get('light_max')
+        prefs.verylight_max = self.request.get('verylight_max')
+        prefs.verylight_min = self.request.get('verylight_max')
+        prefs.put()
+        self.redirect('/')
+
+
 
 application = webapp.WSGIApplication(
     [('/', MainPage),
@@ -205,7 +260,8 @@ application = webapp.WSGIApplication(
      ('/addItem', AddItemPage),
      ('/empty', Empty),
      ('/weather', WeatherPage),
-     ('/edit', EditPage)],
+     ('/edit', EditPage),
+     ('/prefs', PrefPage)],
     debug=True)
 
 def main():
