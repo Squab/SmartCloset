@@ -1,7 +1,7 @@
 import cgi
 import os
 
-import weatherDataForecast
+from weatherDataForecast import weatherDataForecast
 
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
@@ -103,8 +103,6 @@ class AddItemPage(webapp.RequestHandler):
             'url': url,
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/addItem.html')
-<<<<<<< HEAD
-=======
         self.response.out.write(template.render(path, template_values))
 
 
@@ -135,8 +133,7 @@ class WeatherPage(webapp.RequestHandler):
             'rain' : rain, 
             'url': url,
         }
-        path = os.path.join(os.path.dirname(__file__), 'weather.html')
->>>>>>> Adding weather html page
+        path = os.path.join(os.path.dirname(__file__), 'Templates/weather.html')
         self.response.out.write(template.render(path, template_values))
 
 
@@ -205,10 +202,7 @@ application = webapp.WSGIApplication(
      ('/closet', ClosetPage),
      ('/addItem', AddItemPage),
      ('/empty', Empty),
-<<<<<<< HEAD
-=======
      ('/weather', WeatherPage),
->>>>>>> Adding weather html page
      ('/edit', EditPage)],
     debug=True)
 

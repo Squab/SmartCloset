@@ -1,79 +1,79 @@
 <html>
 <head>
-  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-  <link href='http://fonts.googleapis.com/css?family=Maven+Pro|Muli' rel='stylesheet' type='text/css'>
-  <title>{{ edit|default:"Add" }} an item to your closet</title>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link href='http://fonts.googleapis.com/css?family=Maven+Pro|Muli' rel='stylesheet' type='text/css'>
+	<title>{{ edit|default:"Add" }} an item to your closet</title>
 </head>
 <body>
-  <table>
-    <tr><td>
-      <form action="/cloth" method="post">
-       Clothing Name: <input type="text" name="name" name="clothingname" {% if name %} value={{ name }} {% endif %}><br />
-       <font color = #D2E5FA>For example: Green UTCS Shirt, Blue jeans with the hole in the right knee </font><br /><br />
-       Info: <br />
-       &nbsp;&nbsp;&nbsp;&nbsp;What type of clothing is it? <br />
-       &nbsp;&nbsp;&nbsp;&nbsp;
-       <select name="cat">
-        <option value="belt" {% if belt %} selected {% endif %}>Belt</option>
-        <option value="dress" {% if dress %} selected {% endif %}>Dress</option>
-        <option value="hat" {% if hat %} selected {% endif %}>Hat</option>
-        <option value="jacket" {% if jacket %} selected {% endif %}>Jacket</option>
-        <option value="pants" {% if pants %} selected {% endif %}>Pants</option>
-        <option value="shoes" {% if shoes %} selected {% endif %}>Shoes</option>
-        <option value="socks" {% if socks %} selected {% endif %}>Socks</option>
-        <option value="facialwear" {% if facialwear %} selected {% endif %}>Facialwear</option>
-        <option value="sweater" {% if sweater %} selected {% endif %}>Sweater</option>
-        <option value="swimwear" {% if swimwear %} selected {% endif %}>Swimwear</option>
-        <option value="top" {% if top %} selected {% endif %}>Top</option>
-        <option value="umbrella" {% if umbrella %} selected {% endif %}>Umbrella</option>
-      </select> <br /><br />
-      &nbsp;&nbsp;&nbsp;&nbsp;How heavy is the article of clothing? How warm is it to wear? <br />
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <select name="weight">
-        <option value="veryheavy" {% if veryheavy %} selected {% endif %}>Very Heavy</option>
-        <option value="heavy" {% if heavy %} selected {% endif %}>Heavy</option>
-        <option value="medium" {% if medium %} selected {% endif %}>Medium</option>
-        <option value="light" {% if light %} selected {% endif %}>Light</option>
-        <option value="verylight" {% if verylight %} selected {% endif %}>Very Light</option>
-        <option value="na" {% if na %} selected {% endif %}>N/A</option>
-      </select> <br /><br />
-      &nbsp;&nbsp;&nbsp;&nbsp;Does it have any of the following qualities? <br />
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <font color = #D2E5FA>
-        <input type="checkbox" name="options" value="waterproof" {% if waterproof %} checked {% endif %}>Waterproof<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="checkbox" name="options" value="windproof" {% if windproof %} checked {% endif %}>Windproof <br /> 
-        <br /></font>
-        &nbsp;&nbsp;&nbsp;&nbsp;If you were to layer this article, which layer would you wear it on?<br />
-        &nbsp;&nbsp;&nbsp;&nbsp;Select all that apply. <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <font color = #D2E5FA>
-          <input type="checkbox" name="layers" value="low" {% if low %} checked {% endif %}>Lowest -- you would wear nothing underneath<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="checkbox" name="layers" value="mid" {% if mid %} checked {% endif %}>Middle -- you would wear something underneath or on top of this<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="checkbox" name="layers" value="top" {% if top %} checked {% endif %}>Top -- you would wear nothing on top of this<br />
-        </font>
-          <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;How many times would you wear this item before washing it?. <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <select name="period">
-                <option value="1" {% if one %} selected {% endif %}>One Time</option>
-                <option value="2" {% if two %} selected {% endif %}>Two Times</option>
-                <option value="3" {% if three %} selected {% endif %}>Three Times</option>
-                <option value="4" {% if four %} selected {% endif %}>Four Times</option>
-                <option value="10" {% if ten %} selected {% endif %}>Ten Times</option>
-                <option value="20" {% if twenty %} selected {% endif %}>Twenty Times</option>
-                <option value="30" {% if thirty %} selected {% endif %}>Thirty times</option>
-                <option value="100" {% if onehundred %} selected {% endif %}>One HUndred Times</option>
-                <option value="200" {% if twohundred %} selected {% endif %}>Two Hundred Times</option>
-                <option value="-1" {% if negativeone %} selected {% endif %}>N/A</option>
-            </select> <br /><br />
-        <div><input type="submit" value="Add"></div>
-      </form> 
-    </table>
-    <a href="/">Home</ a><br />
-      <a href="{{ url }}">Logout</ a> 
-      </body>
-      </html>
+	<table>
+		<tr><td>
+			<form action="/cloth" method="post">
+				Clothing Name: <input type="text" name="name" name="clothingname" {% if name %} value={{ name }} {% endif %}><br />
+				<font color = #D2E5FA>For example: Green UTCS Shirt, Blue jeans with the hole in the right knee </font><br /><br />
+				Info: <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;What type of clothing is it? <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<select name="cat">
+					<option value="belt" {% if belt %} selected {% endif %}>Belt</option>
+					<option value="dress" {% if dress %} selected {% endif %}>Dress</option>
+					<option value="hat" {% if hat %} selected {% endif %}>Hat</option>
+					<option value="jacket" {% if jacket %} selected {% endif %}>Jacket</option>
+					<option value="pants" {% if pants %} selected {% endif %}>Pants</option>
+					<option value="shoes" {% if shoes %} selected {% endif %}>Shoes</option>
+					<option value="socks" {% if socks %} selected {% endif %}>Socks</option>
+					<option value="facialwear" {% if facialwear %} selected {% endif %}>Facialwear</option>
+					<option value="sweater" {% if sweater %} selected {% endif %}>Sweater</option>
+					<option value="swimwear" {% if swimwear %} selected {% endif %}>Swimwear</option>
+					<option value="top" {% if top %} selected {% endif %}>Top</option>
+					<option value="umbrella" {% if umbrella %} selected {% endif %}>Umbrella</option>
+				</select> <br /><br />
+				&nbsp;&nbsp;&nbsp;&nbsp;How heavy is the article of clothing? How warm is it to wear? <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<select name="weight">
+					<option value="veryheavy" {% if veryheavy %} selected {% endif %}>Very Heavy</option>
+					<option value="heavy" {% if heavy %} selected {% endif %}>Heavy</option>
+					<option value="medium" {% if medium %} selected {% endif %}>Medium</option>
+					<option value="light" {% if light %} selected {% endif %}>Light</option>
+					<option value="verylight" {% if verylight %} selected {% endif %}>Very Light</option>
+					<option value="na" {% if na %} selected {% endif %}>N/A</option>
+				</select> <br /><br />
+				&nbsp;&nbsp;&nbsp;&nbsp;Does it have any of the following qualities? <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<font color = #D2E5FA>
+					<input type="checkbox" name="options" value="waterproof" {% if waterproof %} checked {% endif %}>Waterproof<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="checkbox" name="options" value="windproof" {% if windproof %} checked {% endif %}>Windproof <br /> 
+					<br /></font>
+					&nbsp;&nbsp;&nbsp;&nbsp;If you were to layer this article, which layer would you wear it on?<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;Select all that apply. <br />
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<font color = #D2E5FA>
+						<input type="checkbox" name="layers" value="low" {% if low %} checked {% endif %}>Lowest -- you would wear nothing underneath<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="layers" value="mid" {% if mid %} checked {% endif %}>Middle -- you would wear something underneath or on top of this<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" name="layers" value="top" {% if top %} checked {% endif %}>Top -- you would wear nothing on top of this<br />
+					</font>
+					<br />
+					&nbsp;&nbsp;&nbsp;&nbsp;How many times would you wear this item before washing it?. <br />
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<select name="period">
+						<option value="1" {% if one %} selected {% endif %}>One Time</option>
+						<option value="2" {% if two %} selected {% endif %}>Two Times</option>
+						<option value="3" {% if three %} selected {% endif %}>Three Times</option>
+						<option value="4" {% if four %} selected {% endif %}>Four Times</option>
+						<option value="10" {% if ten %} selected {% endif %}>Ten Times</option>
+						<option value="20" {% if twenty %} selected {% endif %}>Twenty Times</option>
+						<option value="30" {% if thirty %} selected {% endif %}>Thirty times</option>
+						<option value="100" {% if onehundred %} selected {% endif %}>One HUndred Times</option>
+						<option value="200" {% if twohundred %} selected {% endif %}>Two Hundred Times</option>
+						<option value="-1" {% if negativeone %} selected {% endif %}>N/A</option>
+					</select> <br /><br />
+					<div><input type="submit" value="Add"></div>
+				</form> 
+			</table>
+			<a href="/">Home</ a><br />
+				<a href="{{ url }}">Logout</ a> 
+</body>
+</html>
 

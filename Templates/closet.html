@@ -14,7 +14,6 @@
         {% for cloth in clothes %}
             <tr>
             <!-- <b>Person:</b> {{ cloth.user.nickname }}<br>-->
-
             <td><font color = #D2E5FA>{{ cloth.name }} </font></td>
             <td><font color = #D2E5FA> {{ cloth.cat }} </font></td>
             <td><font color = #D2E5FA> {{ cloth.weight }} </font></td>
@@ -34,10 +33,10 @@
     </table><br />
     <form action="/empty" method="post">
       <div><input type="submit" value="Remove all from closet"></div> 
-    </form><be />
-    <a href="/addItem">Add and item to Your Closet</ a><br />
-
+    </form><br />
     <a href="/">Home</ a><br />
+    <a href="/addItem">Add and item to Your Closet</ a><br />
+    <a href="/weather">Check the Weather</a><br />
     <a href="{{ url }}">Logout</ a>
   </body>
 </html>
