@@ -1,10 +1,9 @@
 import cgi
-import collections
 import os
 
-from weatherDataForecast import weatherForecast
-from google.appengine.ext.webapp import template
+import weatherDataForecast
 
+from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -18,6 +17,7 @@ class Clothing(db.Model):
     options = db.StringListProperty()
     period = db.IntegerProperty()
     user = db.UserProperty()
+    numWorn = 0
 
 class Account(db.Model):
     first = db.StringProperty()
@@ -57,7 +57,7 @@ class MainPage(webapp.RequestHandler):
             #'weather': weather,
         }
 
-        path = os.path.join(os.path.dirname(__file__), 'index.html')
+        path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
 
@@ -76,12 +76,13 @@ class ClosetPage(webapp.RequestHandler):
         account = pquery.get()  # gets the first one that matched
         if not account:   # no account exists yet for this user
             account = makeAccount(user)
-
+        closet = ""
         template_values = {
             'clothes': clothes,
             'url': url,
+            'closet': closet,
         }
-        path = os.path.join(os.path.dirname(__file__), 'closet.html')
+        path = os.path.join(os.path.dirname(__file__), 'Templates/closet.html')
         self.response.out.write(template.render(path, template_values))
 
 class AddItemPage(webapp.RequestHandler):
@@ -104,7 +105,7 @@ class AddItemPage(webapp.RequestHandler):
             'clothes': clothes,
             'url': url,
         }
-        path = os.path.join(os.path.dirname(__file__), 'addItem.html')
+        path = os.path.join(os.path.dirname(__file__), 'Templates/addItem.html')
         self.response.out.write(template.render(path, template_values))
 
 
@@ -120,7 +121,7 @@ class Clothes(webapp.RequestHandler):
         clothing.period = int(self.request.get('period'))
         clothing.put()
         self.redirect('/')
-   
+
 
 class Empty(webapp.RequestHandler):
     def post(self):
@@ -130,12 +131,50 @@ class Empty(webapp.RequestHandler):
         db.delete(clothes)
         self.redirect('/')
 
+class EditPage(webapp.RequestHandler):
+    key = None
+    def get(self):
+        self.key = self.request.get('k')
+        article = db.Model.get(self.key)
+        cat = article.cat
+        name = article.name
+        weight = article.weight
+        periods = {'1':'one', '2':'two', '3':'three', '4':'four', '10':'ten', '20':'twenty', '30':'thirty', '100':'onehundred', '200':'twohundred', '-1':'negativeone'}
+        period = periods[str(article.period)]
+        template_values = {
+            'name': name,
+            cat: True,
+            weight: True,
+            period: True,
+            'edit': "Edit",
+        }
+        for layer in article.layers:
+            template_values[layer] = True
+        for option in article.options:
+            template_values[option] = True
+        path = os.path.join(os.path.dirname(__file__), 'Templates/addItem.html')
+        self.response.out.write(template.render(path, template_values))
+
+    def post(self):
+        clothing = db.get(self.key)
+        clothing.user = users.get_current_user()
+        clothing.cat = self.request.get('cat')
+        clothing.name = self.request.get('name')
+        clothing.weight = self.request.get('weight')
+        clothing.options = self.request.get_all('options')
+        clothing.layers = self.request.get_all('layers')
+        clothing.period = int(self.request.get('period'))
+        clothing.put()
+        self.redirect('/')
+
+
 application = webapp.WSGIApplication(
     [('/', MainPage),
      ('/cloth', Clothes),
      ('/closet', ClosetPage),
      ('/addItem', AddItemPage),
-     ('/empty', Empty)],
+     ('/empty', Empty),
+     ('/edit', EditPage)],
     debug=True)
 
 def main():
