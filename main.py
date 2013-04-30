@@ -58,12 +58,25 @@ class MainPage(webapp.RequestHandler):
         w.getXML()    
         currentTemp = int(round(w.getCurrentTemp()))
         wind = int(round(w.getWindSpeed()))
+        prefs = getPrefs(user)
+        size = 'light'
+        if(currentTemp <= prefs.veryheavy_max):
+            size = 'veryheavy'
+        elif(currentTemp <= prefs.heavy_max and currentTemp >= prefs.heavy_min):
+            size = 'heavy'
+        elif(currentTemp <= prefs.medium_max and currentTemp >= prefs.medium_min):
+            size = 'medium'
+        elif(currentTemp <= prefs.light_max and currentTemp >= prefs.light_min):
+            size = 'light'
+        elif(currentTemp >= prefs.verylight_min):
+            size = 'verylight'
+        clothes = getTempClothes(user, size)
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
             'wind': wind,
+            'clothes': clothes,
         }
-
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
@@ -280,6 +293,12 @@ def getCleanClothes(user):
 def getDirtyClothes(user):
     clothes = Clothing.all().order('-user')
     clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2", user, False)
+    clothes = clothes_query.fetch(None)
+    return clothes
+
+def getTempClothes(user, size):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3", user, True, size)
     clothes = clothes_query.fetch(None)
     return clothes
 
