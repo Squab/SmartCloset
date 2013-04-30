@@ -148,6 +148,8 @@ class Laundry(webapp.RequestHandler):
         clothes = getDirtyClothes(user)
         for cloth in clothes:
             cloth.clean = True
+            cloth.put()
+        self.redirect('/')
 
 class MarkClean(webapp.RequestHandler):
     def post(self):

@@ -27,7 +27,7 @@
             <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
             <td>{{ cloth.numWorn }} time(s)</td>
             {% if cloth.clean %}
-                <td>{{ cloth.clean }}<br />
+                <td>Yes!<br />
                 <form action="/dirty" method="post">
                     <input type="hidden" name="key" value={{ cloth.key }}>
                     <input type="submit" value="Mark Dirty">
@@ -47,6 +47,9 @@
           {% endfor %}
       </tr>
     </table><br />
+    <form action="/laundry" method="post">
+      <div><input type="submit" value="Mark all clothes as clean"></div> 
+    </form><br />
     <form action="/empty" method="post">
       <div><input type="submit" value="Remove all from closet"></div> 
     </form><br />
