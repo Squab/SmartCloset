@@ -17,4 +17,4 @@ B) a script or program that can pull from at least 2 of the weather data sources
 
 C) some method of reading from both to make clothing suggestions based on some basic preferences.
 
-D) a ui for the closet and a UK for the suggestion maker.
+D) a ui for the closet and a ui for the suggestion maker.
