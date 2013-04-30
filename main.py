@@ -34,23 +34,21 @@ class Preferences(db.Model):
     verylight_max = db.IntegerProperty()
     verylight_min = db.IntegerProperty()
     location = db.StringProperty()
-    warmer = db.BooleanProperty()
 
 def makePreferences(user):
     prefs = Preferences()
     prefs.user = user
-    prefs.veryheavy_max = 30
+    prefs.veryheavy_max = 20
     prefs.veryheavy_min = -100
     prefs.heavy_max = 40
-    prefs.heavy_min = 10
+    prefs.heavy_min = 25
     prefs.medium_max = 60
-    prefs.medium_min = 30
+    prefs.medium_min = 40
     prefs.light_max = 80
-    prefs.light_min = 50
+    prefs.light_min = 55
     prefs.verylight_max = 120
     prefs.verylight_min = 70
     prefs.location = "Austin"
-    prefs.warmer = True
     return prefs
 
 class MainPage(webapp.RequestHandler):
@@ -76,11 +74,14 @@ class MainPage(webapp.RequestHandler):
         clothes = getTempClothes(user, size)
         top = getOutfitTop(user, size)
         bottom = getOutfitBottom(user, size)
+        clothes = {top, bottom}
+        empty = 'empty'
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
             'wind': wind,
-            'clothes': {top, bottom},
+            'clothes': clothes,
+  #          'empty': empty,
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
@@ -139,19 +140,17 @@ class WeatherPage(webapp.RequestHandler):
 
 class Clothes(webapp.RequestHandler):
     def post(self):
-        num = int(self.request.get('num'))
-        for i in range(num):
-            clothing = Clothing()
-            clothing.user = users.get_current_user()
-            clothing.cat = self.request.get('cat')
-            clothing.name = self.request.get('name')
-            clothing.weight = self.request.get('weight')
-            clothing.options = self.request.get_all('options')
-            clothing.layers = self.request.get_all('layers')
-            clothing.period = int(self.request.get('period'))
-            clothing.numWorn = 0;
-            clothing.clean = True;
-            clothing.put()
+        clothing = Clothing()
+        clothing.user = users.get_current_user()
+        clothing.cat = self.request.get('cat')
+        clothing.name = self.request.get('name')
+        clothing.weight = self.request.get('weight')
+        clothing.options = self.request.get_all('options')
+        clothing.layers = self.request.get_all('layers')
+        clothing.period = int(self.request.get('period'))
+        clothing.numWorn = 0;
+        clothing.clean = True;
+        clothing.put()
         self.redirect('/')
 
 
@@ -252,15 +251,14 @@ class PrefPage(webapp.RequestHandler):
         prefs.veryheavy_max = long(self.request.get('veryheavy_max'))
         prefs.veryheavy_min = long(self.request.get('veryheavy_min'))
         prefs.heavy_max = long(self.request.get('heavy_max'))
-        prefs.heavy_min = long(self.request.get('heavy_min'))
+        prefs.heavy_min = long(self.request.get('heavy_max'))
         prefs.medium_max = long(self.request.get('medium_max'))
-        prefs.medium_min = long(self.request.get('medium_min'))
+        prefs.medium_min = long(self.request.get('medium_max'))
         prefs.light_max = long(self.request.get('light_max'))
-        prefs.light_min = long(self.request.get('light_min'))
+        prefs.light_min = long(self.request.get('light_max'))
         prefs.verylight_max = long(self.request.get('verylight_max'))
-        prefs.verylight_min = long(self.request.get('verylight_min'))
+        prefs.verylight_min = long(self.request.get('verylight_max'))
         prefs.location = self.request.get('location')
-        prefs.warmer = self.request.get('warmer') == true
         prefs.put()
         self.redirect('/')
 
@@ -315,6 +313,10 @@ def getOutfitTop(user, size):
     clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3 AND cat= :4", user, True, size, 'top')
     clothes = clothes_query.fetch(None)
     numItems = len(clothes)
+    if(numItems == 1):
+        return clothes.pop()
+    elif(numItems == 0):
+        return 'empty'
     index = random.randint(0,numItems-1)
     cloth = clothes.pop(index)
     return cloth
@@ -324,6 +326,10 @@ def getOutfitBottom(user, size):
     clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3 AND cat= :4", user, True, size, 'pants')
     clothes = clothes_query.fetch(None)
     numItems = len(clothes)
+    if(numItems == 1):
+        return clothes.pop()
+    elif(numItems == 0):
+        return 'empty'
     index = random.randint(0,numItems-1)
     cloth = clothes.pop(index)
     return cloth
