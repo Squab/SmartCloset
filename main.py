@@ -120,7 +120,6 @@ class WeatherPage(webapp.RequestHandler):
         wind = int(round(w.getWindSpeed()))
         humid = int(round(w.getHumidity()))
         rain = w.getHumidity()
-
         template_values = {
             'temp': temp,
             'maxTemp' : maxtemp,
@@ -159,12 +158,23 @@ class Empty(webapp.RequestHandler):
         db.delete(clothes)
         self.redirect('/')
 
+class MarkWorn(webapp.RequestHandler):
+    def post(self):
+        key = self.request.get('key')
+        clothing = db.get(key)
+        clothing.numWorn += 1
+        if clothing.numWorn == clothing.period:
+            clothing.clean = False
+        clothing.put()
+        self.redirect('/')
+
 class Laundry(webapp.RequestHandler):
     def post(self):
         user = users.get_current_user()
         clothes = getDirtyClothes(user)
         for cloth in clothes:
             cloth.clean = True
+            cloth.numWorn = 0
             cloth.put()
         self.redirect('/')
 
@@ -173,6 +183,7 @@ class MarkClean(webapp.RequestHandler):
         key = self.request.get('key')
         clothing = db.get(key)
         clothing.clean = True
+        clothing.numWorn = 0
         clothing.put()
         self.redirect('/')
 
@@ -181,6 +192,7 @@ class MarkDirty(webapp.RequestHandler):
         key = self.request.get('key')
         clothing = db.get(key)
         clothing.clean = False
+        clothing.numWorn = max(clothing.period, 0)
         clothing.put()
         self.redirect('/')
 
@@ -273,6 +285,7 @@ application = webapp.WSGIApplication(
      ('/clean', MarkClean),
      ('/dirty', MarkDirty),
      ('/remove', Remove),
+     ('/worn', MarkWorn),
      ('/prefs', PrefPage)],
     debug=True)
 
