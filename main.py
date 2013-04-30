@@ -19,13 +19,8 @@ class Clothing(db.Model):
     user = db.UserProperty()
     numWorn = 0
 
-class Account(db.Model):
-    first = db.StringProperty()
-    last = db.StringProperty()
-    user = db.UserProperty()
-    prefs = db.StringProperty()
-
 class Preferences(db.Model):
+    user = db.UserProperty()
     veryheavy_max = db.IntegerProperty()
     veryheavy_min = db.IntegerProperty()
     heavy_max = db.IntegerProperty()
@@ -36,34 +31,32 @@ class Preferences(db.Model):
     light_min = db.IntegerProperty()
     verylight_max = db.IntegerProperty()
     verylight_min = db.IntegerProperty()
+    location = db.StringProperty()
 
-
-def makeAccount(user):
-    account = Account()
-    account.user = user
-    account.first = user.nickname()  # or some other default value like ' '
-    account.last = user.nickname()
+def makePreferences(user):
     prefs = Preferences()
-    prefs.put()
-    account.prefs = prefs.key()
-    account.put()
-    return account
+    prefs.user = user
+    prefs.veryheavy_max = 20
+    prefs.veryheavy_min = -100
+    prefs.heavy_max = 40
+    prefs.heavy_min = 25
+    prefs.medium_max = 60
+    prefs.medium_min = 40
+    prefs.light_max = 80
+    prefs.light_min = 55
+    prefs.verylight_max = 120
+    prefs.verylight_min = 70
+    prefs.location = "Austin"
+    return prefs
 
 class MainPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
-
         w = weatherDataForecast()
         w.getXML()    
         currentTemp = int(round(w.getCurrentTemp()))
         wind = int(round(w.getWindSpeed()))
-
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
@@ -76,19 +69,9 @@ class MainPage(webapp.RequestHandler):
 
 class ClosetPage(webapp.RequestHandler):
     def get(self):
-        clothes = Clothing.all().order('-user')
-
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-
-
-        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(None)
-            
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
+        clothes = getCloset(user)
         template_values = {
             'clothes': clothes,
             'url': url,
@@ -98,20 +81,9 @@ class ClosetPage(webapp.RequestHandler):
 
 class AddItemPage(webapp.RequestHandler):
     def get(self):
-        clothes = Clothing.all().order('-user')
-
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-
-
-        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(None)
-            
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
-
+        clothes = getCloste(user)
         template_values = {
             'clothes': clothes,
             'url': url,
@@ -124,11 +96,6 @@ class WeatherPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)    
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
-
         w = weatherDataForecast()
         w.getXML()    
         temp = int(round(w.getCurrentTemp()))
@@ -213,20 +180,12 @@ class EditPage(webapp.RequestHandler):
 
 class PrefPage(webapp.RequestHandler):
     def get(self):
-        clothes = Clothing.all().order('-user')
-
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-
-
-        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(None)
-            
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  # gets the first one that matched
-        if not account:   # no account exists yet for this user
-            account = makeAccount(user)
+        clothes = getCloset(user)
+        prefs = getPrefs(user)
         template_values = {
+            'prefs': prefs,
             'clothes': clothes,
             'url': url,
         }
@@ -235,19 +194,18 @@ class PrefPage(webapp.RequestHandler):
 
     def post(self):
         user = users.get_current_user()
-        pquery = db.GqlQuery("SELECT * FROM Account where user= :1",user)
-        account = pquery.get()  #TODO this doesn't work, we need some other way of getting the user's
-        prefs = db.Model.get(account.prefs)
-        prefs.veryheavy_max = self.request.get('veryheavy_max')
-        prefs.veryheavy_min = self.request.get('veryheavy_min')
-        prefs.heavy_max = self.request.get('heavy_max')
-        prefs.heavy_min = self.request.get('heavy_max')
-        prefs.medium_max = self.request.get('medium_max')
-        prefs.medium_min = self.request.get('medium_max')
-        prefs.light_max = self.request.get('light_max')
-        prefs.light_min = self.request.get('light_max')
-        prefs.verylight_max = self.request.get('verylight_max')
-        prefs.verylight_min = self.request.get('verylight_max')
+        prefs = getPrefs(user)
+        prefs.veryheavy_max = long(self.request.get('veryheavy_max'))
+        prefs.veryheavy_min = long(self.request.get('veryheavy_min'))
+        prefs.heavy_max = long(self.request.get('heavy_max'))
+        prefs.heavy_min = long(self.request.get('heavy_max'))
+        prefs.medium_max = long(self.request.get('medium_max'))
+        prefs.medium_min = long(self.request.get('medium_max'))
+        prefs.light_max = long(self.request.get('light_max'))
+        prefs.light_min = long(self.request.get('light_max'))
+        prefs.verylight_max = long(self.request.get('verylight_max'))
+        prefs.verylight_min = long(self.request.get('verylight_max'))
+        prefs.location = self.request.get('location')
         prefs.put()
         self.redirect('/')
 
@@ -263,6 +221,20 @@ application = webapp.WSGIApplication(
      ('/edit', EditPage),
      ('/prefs', PrefPage)],
     debug=True)
+
+
+def getPrefs(user):
+    pquery = db.GqlQuery("SELECT * FROM Preferences where user= :1",user)
+    prefs = pquery.get()  # gets the first one that matched
+    if not prefs:   # no account exists yet for this user
+        prefs = makePreferences(user)
+    return prefs
+
+def getCloset(user):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
+    clothes = clothes_query.fetch(None)
+    clothes
 
 def main():
     run_wsgi_app(application)

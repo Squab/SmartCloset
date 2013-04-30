@@ -7,23 +7,40 @@
 <h1>Preferences</h1>
 <body>
     <form action="/prefs" method="post">
-        Set your clothing weight preferences (please note, theses values can overlap):<br /><br />
+        <h3>Set your clothing weight preferences<br />
+        (please note, theses values can overlap):<br /><br /></h3>
         What weather would you wear "very heavy" clothing in? <br />
-        <input type="text" name="veryheavy_max" placeholder="Max Temperature"><br />
-        <input type="text" name="veryheavy_min" placeholder="Min Temperature"><br /><br />
+        Max Temperature:<br />
+        <input type="text" name="veryheavy_max" value={{ prefs.veryheavy_max }}><br />
+        Min Temperature:<br />
+        <input type="text" name="veryheavy_min" value={{ prefs.veryheavy_min }}><br /><br />
         What weather would you wear "heavy" clothing in? <br />
-        <input type="text" name="heavy_max" placeholder="Max Temperature"><br />
-        <input type="text" name="heavy_min" placeholder="Min Temperature"><br /><br />
+        Max Temperature:<br />
+        <input type="text" name="heavy_max" value={{ prefs.heavy_max }}><br />
+        Min Temperature:<br />
+        <input type="text" name="heavy_min" value={{ prefs.heavy_min }}><br /><br />
         What weather would you wear "medium" clothing in? <br />
-        <input type="text" name="medium_max" placeholder="Max Temperature"><br />
-        <input type="text" name="medium_min" placeholder="Min Temperature"><br /><br />
+        Max Temperature:<br />
+        <input type="text" name="medium_max" value={{ prefs.medium_max }}><br />
+        Min Temperature:<br />
+        <input type="text" name="medium_min" value={{ prefs.medium_min }}><br /><br />
         What weather would you wear "light" clothing in? <br />
-        <input type="text" name="light_max" placeholder="Max Temperature"><br />
-        <input type="text" name="light_min" placeholder="Min Temperature"><br /><br />
+        Max Temperature:<br />
+        <input type="text" name="light_max" value={{ prefs.light_max }}><br />
+        Min Temperature:<br />
+        <input type="text" name="light_min" value={{ prefs.light_min }}><br /><br />
         What weather would you wear "very light" clothing in? <br />
-        <input type="text" name="verylight_max" placeholder="Max Temperature"><br />
-        <input type="text" name="verylight_min" placeholder="Min Temperature"><br /><br />
+        Max Temperature:<br />
+        <input type="text" name="verylight_max" value={{ prefs.verylight_max }}><br />
+        Min Temperature:<br />
+        <input type="text" name="verylight_min" value={{ prefs.verylight_min }}><br /><br />
         <input type="submit" value="Save Preferences"><br /><br />
+
+        <h3>Set your location preferences:<br /></h3>
+        What is your primary location:<br />
+        <input type="text" name="location" value={{ prefs.location }}><br /><br />
+        <input type="submit" value="Save Preferences"><br /><br />
+    </form>
 
     <a href="/">Home</a><br />
     <a href="{{ url }}">Logout</a>
