@@ -185,7 +185,7 @@ class MarkWorn(webapp.RequestHandler):
 class Laundry(webapp.RequestHandler):
     def post(self):
         user = users.get_current_user()
-        clothes = getDirtyClothes(user)
+        clothes = getAllClothes(user)
         for cloth in clothes:
             cloth.clean = True
             cloth.numWorn = 0
