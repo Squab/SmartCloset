@@ -209,6 +209,16 @@ class MarkDirty(webapp.RequestHandler):
         clothing.put()
         self.redirect('/')
 
+# TODO this method does nothing
+class NewRec(webapp.RequestHandler):
+    def post(self):
+        keys = self.request.get_all('keep')
+        for key in keys:
+            clothing = db.get(key)
+            clothing.put()
+        self.redirect('/')
+
+
 class Remove(webapp.RequestHandler):
     def post(self):
         key = self.request.get('key')
@@ -299,6 +309,7 @@ application = webapp.WSGIApplication(
      ('/remove', Remove),
      ('/worn', MarkWorn),
      ('/wornOutfitWorn', MarkOutfitWorn),
+     ('/newRec', NewRec),
      ('/prefs', PrefPage)],
     debug=True)
 

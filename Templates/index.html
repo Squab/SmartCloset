@@ -14,34 +14,35 @@
 
 
     <table border = 1>
+      <form action="/newRec" method="post">
       <tr>
-        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><td>Give me a different one</td>
+        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><td><input type="submit" value="Give me a different one with these items in it"></td>
       </tr>
       <tr>
+        <form action="/newRec" method="post">
         {% for cloth in clothes %}
-            {% if cloth %}
-                  <form action="/newRec" method="post">
-                  <tr>
-                  <td><font color = #D2E5FA>{{ cloth.name }} </font></td>
-                  <td><font color = #D2E5FA> {{ cloth.cat }} </font></td>
-                  <td><font color = #D2E5FA> {{ cloth.weight }} </font></td>
-                  <td><font color = #D2E5FA>
-                  {% for layer in cloth.layers %}
-                      {{ layer }}&nbsp;
-                  {% endfor %} </font></td>
-                  <td><font color = #D2E5FA>
-                  {% for option in cloth.options %}
-                      {{ option }}
-                  {% endfor %}</font></td>
-                  <br />
-                  <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
-                  <td>{{ cloth.numWorn }} time(s)</td>
-                  <input type="hidden" name="key" value={{ cloth.key }}>
-                  <td><input type="submit" value="Give me a diffrent one"></td>
-                  </form>
-              {% endif %}
+        {% if cloth %}
+              <tr>
+              <td><font color = #D2E5FA>{{ cloth.name }} </font></td>
+              <td><font color = #D2E5FA> {{ cloth.cat }} </font></td>
+              <td><font color = #D2E5FA> {{ cloth.weight }} </font></td>
+              <td><font color = #D2E5FA>
+              {% for layer in cloth.layers %}
+                  {{ layer }}&nbsp;
+              {% endfor %} </font></td>
+              <td><font color = #D2E5FA>
+              {% for option in cloth.options %}
+                  {{ option }}
+              {% endfor %}</font></td>
+              <br />
+              <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
+              <td>{{ cloth.numWorn }} time(s)</td>
+              <td><input type="checkbox" name="keep" value={{ cloth.key }} {% if keys.cloth == cloth %} checked {% endif %}></td>
+              </form>
+          {% endif %}
           {% endfor %}
       </tr>
+      </form>
     </table><br />
     <br />
     {% if not top %}
