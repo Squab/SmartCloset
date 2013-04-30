@@ -3,16 +3,17 @@ from xml.dom.minidom import parseString
 import time
 class weatherDataForecast:
 	wdf=''
+	city=''
 	def __init__(self):
-		wdf=''
+		self.wdf=''
+		self.city='Austin'
 		self.getXML()
 	#Call getXML() to get the latest weather forecast before making any new decisions.
 	#Returns boolean value False if weather data is not retrieved, run again
 	# in this case.  Returns True otherwise.
 	def getXML(self):
-		city = "Austin" #city needs to be entered upon setup or determined some other way
 		url = "http://api.openweathermap.org/data/2.5/forecast/daily?q="
-		url += city
+		url += self.city
 		url += "&mode=xml&units=imperial&cnt=1"
 		source = urllib2.urlopen(url)
 		#print ('source: ')
@@ -33,6 +34,12 @@ class weatherDataForecast:
 		#print xmlTag1
 		#print xmlData
 		return xmlData
+	#Changes home city and refreshes weather data
+	#openweathermap can be picky about the name of cities, so for now only 
+	#change this to cities we've tested before.
+	def setCity(self,city):
+		self.city=city
+		self.getXML()
 
 	#tests whether string dat is XML weather data, will not work for other data types
 	#It is possible that weatherDataForecast will be instantiated with bad XML 
@@ -121,25 +128,35 @@ class weatherDataForecast:
 	#print parseTest('windSpeed')
 	def getWindSpeed(self):
 		windData=self.parseTest('windSpeed')
-		index=windData.find('mps',0,len(windData))+5
-		end=windData.find('name',0,len(windData))-2
+		index=windData.find('mps',0,len(windData))
+		#print index
+		end=windData.find('name',0,len(windData))
+		#print end
+		if end<index or index<0:
+			return 0
 		#print index
 		#print end
-		ret=float(windData[index:end])
+		ret=float(windData[index+5:end-2])
 		return ret
 	#print getWindSpeed()
 	#print parseTest('precipitation')
 	def getRainSeverity(self):
 		rainData=self.parseTest('precipitation')
-		index=rainData.find('value',0,len(rainData))+7
-		end=len(rainData)-3
-		ret=float(rainData[index:end])
+		index=rainData.find('value',0,len(rainData))
+		#print index
+		end=rainData.find('/>',0,len(rainData))
+		#print end
+		if end<index or index<0:
+			#print('NO RAIN HERE, GO AWAY AND STOP RUNNING THIS METHOD')
+			return 0
+			#print('EVERYTHING IS LIES')
+		ret=float(rainData[index+7:end-1])
 		#print ret
-		if ret<20:
+		if ret<2:
 			ret=0
-		if ret<50 and ret>=20:
+		if ret<30 and ret>=2:
 			ret=1
-		if ret>=50:
+		if ret>=30:
 			ret=2
 		return ret
 	#print getRainSeverity()
