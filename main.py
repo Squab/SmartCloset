@@ -59,29 +59,16 @@ class MainPage(webapp.RequestHandler):
         w.getXML()    
         currentTemp = int(round(w.getCurrentTemp()))
         wind = int(round(w.getWindSpeed()))
-        prefs = getPrefs(user)
-        size = 'light'
-        if(currentTemp <= prefs.veryheavy_max):
-            size = 'veryheavy'
-        elif(currentTemp <= prefs.heavy_max and currentTemp >= prefs.heavy_min):
-            size = 'heavy'
-        elif(currentTemp <= prefs.medium_max and currentTemp >= prefs.medium_min):
-            size = 'medium'
-        elif(currentTemp <= prefs.light_max and currentTemp >= prefs.light_min):
-            size = 'light'
-        elif(currentTemp >= prefs.verylight_min):
-            size = 'verylight'
-        clothes = getTempClothes(user, size)
-        top = getOutfitTop(user, size)
-        bottom = getOutfitBottom(user, size)
-        clothes = {top, bottom}
+        elements = getMainValues(user, currentTemp)
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
             'wind': wind,
-            'clothes': clothes,
-            'top': top,
-            'bottom': bottom,
+            'clothes': {elements.pop(), elements.pop()},
+            'bottom': elements.pop(),
+            'top': elements.pop(),
+            'dirty': elements.pop(),
+            'size': elements.pop(),
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
@@ -344,6 +331,12 @@ def getTempClothes(user, size):
     clothes = clothes_query.fetch(None)
     return clothes
 
+def getTempDirtyClothes(user, size):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3", user, False, size)
+    clothes = clothes_query.fetch(None)
+    return clothes
+
 def getOutfitTop(user, size):
     clothes = Clothing.all().order('-user')
     clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3 AND cat= :4", user, True, size, 'top')
@@ -369,6 +362,28 @@ def getOutfitBottom(user, size):
     index = random.randint(0,numItems-1)
     cloth = clothes.pop(index)
     return cloth
+
+def getSize(user, currentTemp, prefs):
+    size = 'medium'
+    if(currentTemp <= prefs.veryheavy_max):
+        size = 'veryheavy'
+    elif(currentTemp <= prefs.heavy_max and currentTemp >= prefs.heavy_min):
+        size = 'heavy'
+    elif(currentTemp <= prefs.medium_max and currentTemp >= prefs.medium_min):
+        size = 'medium'
+    elif(currentTemp <= prefs.light_max and currentTemp >= prefs.light_min):
+        size = 'light'
+    elif(currentTemp >= prefs.verylight_min):
+        size = 'verylight'
+    return size
+
+def getMainValues(user, temp):
+    prefs = getPrefs(user)
+    size = getSize(user, temp, prefs)
+    dirty = getTempDirtyClothes(user, size)
+    top = getOutfitTop(user, size)
+    bottom = getOutfitBottom(user, size)
+    return [prefs, size, dirty, top, bottom, bottom, top]
 
 def main():
     run_wsgi_app(application)
