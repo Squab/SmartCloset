@@ -161,6 +161,17 @@ class Empty(webapp.RequestHandler):
         db.delete(clothes)
         self.redirect('/')
 
+class MarkOutfitWorn(webapp.RequestHandler):
+    def post(self):
+        keys = self.request.get_all('key')
+        for key in keys:
+            clothing = db.get(key)
+            clothing.numWorn += 1
+            if clothing.numWorn == clothing.period:
+                clothing.clean = False
+            clothing.put()
+        self.redirect('/')
+
 class MarkWorn(webapp.RequestHandler):
     def post(self):
         key = self.request.get('key')
@@ -195,7 +206,6 @@ class MarkDirty(webapp.RequestHandler):
         key = self.request.get('key')
         clothing = db.get(key)
         clothing.clean = False
-        clothing.numWorn = max(clothing.period, 0)
         clothing.put()
         self.redirect('/')
 
@@ -289,6 +299,7 @@ application = webapp.WSGIApplication(
      ('/dirty', MarkDirty),
      ('/remove', Remove),
      ('/worn', MarkWorn),
+     ('/wornOutfitWorn', MarkOutfitWorn),
      ('/prefs', PrefPage)],
     debug=True)
 

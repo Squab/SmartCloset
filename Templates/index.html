@@ -12,7 +12,7 @@
     <b>Of your clean clothes, you should wear:</b>
     <br /><br />
 
-
+    <form action="/wornOutfitWorn" method="post">
     <table border = 1>
       <tr>
         <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td>
@@ -34,10 +34,12 @@
             <br />
             <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
             <td>{{ cloth.numWorn }} time(s)</td>
+            <input type="hidden" name="key" value={{ cloth.key }}>
           {% endfor %}
       </tr>
     </table><br />
-
+        <input type="submit" value="I'm going to wear this outfit"> 
+    </form>
     <a href="/closet">View Your Closet</a><br />
     <a href="/addItem">Add an item to Your Closet</a><br />
     <a href="/weather">Check the Weather</a><br />
