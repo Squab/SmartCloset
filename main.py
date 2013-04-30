@@ -75,13 +75,13 @@ class MainPage(webapp.RequestHandler):
         top = getOutfitTop(user, size)
         bottom = getOutfitBottom(user, size)
         clothes = {top, bottom}
-        empty = 'empty'
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
             'wind': wind,
             'clothes': clothes,
-  #          'empty': empty,
+            'top': top,
+            'bottom': bottom,
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
@@ -341,7 +341,7 @@ def getOutfitTop(user, size):
     if(numItems == 1):
         return clothes.pop()
     elif(numItems == 0):
-        return 'empty'
+        return None
     index = random.randint(0,numItems-1)
     cloth = clothes.pop(index)
     return cloth
@@ -354,7 +354,7 @@ def getOutfitBottom(user, size):
     if(numItems == 1):
         return clothes.pop()
     elif(numItems == 0):
-        return 'empty'
+        return None
     index = random.randint(0,numItems-1)
     cloth = clothes.pop(index)
     return cloth

@@ -43,12 +43,25 @@
           {% endfor %}
       </tr>
     </table><br />
-    <form action="/wornOutfitWorn" method="post">
-        {% for cloth in clothes %}
-            <input type="hidden" name="key" value={{ cloth.key }}>
-        {% endfor %}
-        <input type="submit" value="I'm going to wear this outfit"> 
-    </form><br /><br />
+    <br />
+    {% if not top %}
+        We recommend buying a top for this weather.<br />
+        <br />
+        {% endif %}
+    {% if not bottom %}
+        We recommend buying a bottom for this weather.<br />
+        <br />
+        {% endif %}
+
+    
+    {% if bottom and top %}
+        <form action="/wornOutfitWorn" method="post">
+            {% for cloth in clothes %}
+                <input type="hidden" name="key" value={{ cloth.key }}>
+            {% endfor %}
+            <input type="submit" value="I'm going to wear this outfit"> 
+        </form>
+        {% endif %}<br /><br />
     <a href="/closet">View Your Closet</a><br />
     <a href="/addItem">Add an item to Your Closet</a><br />
     <a href="/weather">Check the Weather</a><br />
