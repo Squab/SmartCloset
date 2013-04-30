@@ -17,7 +17,8 @@ class Clothing(db.Model):
     options = db.StringListProperty()
     period = db.IntegerProperty()
     user = db.UserProperty()
-    numWorn = 0
+    numWorn = db.IntegerProperty()
+    clean = db.BooleanProperty()
 
 class Preferences(db.Model):
     user = db.UserProperty()
@@ -83,7 +84,7 @@ class AddItemPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-        clothes = getCloste(user)
+        clothes = getCloset(user)
         template_values = {
             'clothes': clothes,
             'url': url,
@@ -128,6 +129,8 @@ class Clothes(webapp.RequestHandler):
         clothing.options = self.request.get_all('options')
         clothing.layers = self.request.get_all('layers')
         clothing.period = int(self.request.get('period'))
+        clothing.wornNum = 0;
+        clothes.clean = True;
         clothing.put()
         self.redirect('/')
 

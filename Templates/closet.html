@@ -8,7 +8,7 @@
     <h1> Closet Contents</h1>
     <table border = 1>
       <tr>
-        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Edit link</td>
+        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><td>Clean?</td><td>Edit link</td>
       </tr>
       <tr>
         {% for cloth in clothes %}
@@ -36,6 +36,7 @@
     <a href="/">Home</ a><br />
     <a href="/addItem">Add and item to Your Closet</ a><br />
     <a href="/weather">Check the Weather</a><br />
+    <a href="/prefs">Set your Preferences</a><br />		
     <a href="{{ url }}">Logout</ a>
   </body>
 </html>
