@@ -22,7 +22,12 @@
             {% endfor %} </font></td>
             <td><font color = #D2E5FA>
             {% for option in cloth.options %}
-              {{ option }}
+              {% if option == "waterproof" %}
+                <img src="/images/waterproof.png" alt="Waterproof" height="60" width="60"> 
+              {% endif %}
+              {% if option == "windproof" %}
+                <img src="/images/windproof.png" alt="Waterproof" height="60" width="60"> 
+              {% endif %}
             {% endfor %}</font></td>
             <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
             <td>{{ cloth.numWorn }} time(s)<br />

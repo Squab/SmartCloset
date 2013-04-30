@@ -1,5 +1,6 @@
 import cgi
 import os
+import random
 
 from weatherDataForecast import weatherDataForecast
 
@@ -73,11 +74,13 @@ class MainPage(webapp.RequestHandler):
         elif(currentTemp >= prefs.verylight_min):
             size = 'verylight'
         clothes = getTempClothes(user, size)
+        top = getOutfitTop(user, size)
+        bottom = getOutfitBottom(user, size)
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
             'wind': wind,
-            'clothes': clothes,
+            'clothes': {top, bottom},
         }
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
@@ -319,6 +322,24 @@ def getTempClothes(user, size):
     clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3", user, True, size)
     clothes = clothes_query.fetch(None)
     return clothes
+
+def getOutfitTop(user, size):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3 AND cat= :4", user, True, size, 'top')
+    clothes = clothes_query.fetch(None)
+    numItems = len(clothes)
+    index = random.randint(0,numItems-1)
+    cloth = clothes.pop(index)
+    return cloth
+
+def getOutfitBottom(user, size):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2 AND weight= :3 AND cat= :4", user, True, size, 'pants')
+    clothes = clothes_query.fetch(None)
+    numItems = len(clothes)
+    index = random.randint(0,numItems-1)
+    cloth = clothes.pop(index)
+    return cloth
 
 def main():
     run_wsgi_app(application)
