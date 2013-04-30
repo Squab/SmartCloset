@@ -10,47 +10,10 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 
-class Clothing(db.Model):
-    name = db.StringProperty(multiline=False)
-    cat = db.StringProperty(multiline=False)
-    weight = db.StringProperty(multiline=False)
-    layers = db.StringListProperty()
-    options = db.StringListProperty()
-    period = db.IntegerProperty()
-    user = db.UserProperty()
-    numWorn = db.IntegerProperty()
-    clean = db.BooleanProperty()
 
-class Preferences(db.Model):
-    user = db.UserProperty()
-    veryheavy_max = db.IntegerProperty()
-    veryheavy_min = db.IntegerProperty()
-    heavy_max = db.IntegerProperty()
-    heavy_min = db.IntegerProperty()
-    medium_max = db.IntegerProperty()
-    medium_min = db.IntegerProperty()
-    light_max = db.IntegerProperty()
-    light_min = db.IntegerProperty()
-    verylight_max = db.IntegerProperty()
-    verylight_min = db.IntegerProperty()
-    location = db.StringProperty()
-
-def makePreferences(user):
-    prefs = Preferences()
-    prefs.user = user
-    prefs.veryheavy_max = 20
-    prefs.veryheavy_min = -100
-    prefs.heavy_max = 40
-    prefs.heavy_min = 25
-    prefs.medium_max = 60
-    prefs.medium_min = 40
-    prefs.light_max = 80
-    prefs.light_min = 55
-    prefs.verylight_max = 120
-    prefs.verylight_min = 70
-    prefs.location = "Austin"
-    return prefs
-
+#########################################################
+# Page classes
+#########################################################
 class MainPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
@@ -123,7 +86,79 @@ class WeatherPage(webapp.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'Templates/weather.html')
         self.response.out.write(template.render(path, template_values))
 
+class EditPage(webapp.RequestHandler):
+    def get(self):
+        key = self.request.get('k')
+        article = db.Model.get(key)
+        cat = article.cat
+        name = article.name
+        weight = article.weight
+        periods = {'1':'one', '2':'two', '3':'three', '4':'four', '10':'ten', '20':'twenty', '30':'thirty', '100':'onehundred', '200':'twohundred', '-1':'negativeone'}
+        period = periods[str(article.period)]
+        template_values = {
+            'name': name,
+            cat: True,
+            weight: True,
+            period: True,
+            'edit': 'Edit',
+            'value': '/edit',
+            'key': key,
+        }
+        for layer in article.layers:
+            template_values[layer] = True
+        for option in article.options:
+            template_values[option] = True
+        path = os.path.join(os.path.dirname(__file__), 'Templates/addItem.html')
+        self.response.out.write(template.render(path, template_values))
 
+    def post(self):
+        key = self.request.get('key')
+        clothing = db.get(key)
+        clothing.user = users.get_current_user()
+        clothing.cat = self.request.get('cat')
+        clothing.name = self.request.get('name')
+        clothing.weight = self.request.get('weight')
+        clothing.options = self.request.get_all('options')
+        clothing.layers = self.request.get_all('layers')
+        clothing.period = int(self.request.get('period'))
+        clothing.put()
+        self.redirect('/')
+
+class PrefPage(webapp.RequestHandler):
+    def get(self):
+        user = users.get_current_user()
+        url = users.create_logout_url(self.request.uri)
+        clothes = getAllClothes(user)
+        prefs = getPrefs(user)
+        template_values = {
+            'prefs': prefs,
+            'clothes': clothes,
+            'url': url,
+        }
+        path = os.path.join(os.path.dirname(__file__), 'Templates/prefs.html')
+        self.response.out.write(template.render(path, template_values))
+
+    def post(self):
+        user = users.get_current_user()
+        prefs = getPrefs(user)
+        prefs.veryheavy_max = long(self.request.get('veryheavy_max'))
+        prefs.veryheavy_min = long(self.request.get('veryheavy_min'))
+        prefs.heavy_max = long(self.request.get('heavy_max'))
+        prefs.heavy_min = long(self.request.get('heavy_max'))
+        prefs.medium_max = long(self.request.get('medium_max'))
+        prefs.medium_min = long(self.request.get('medium_max'))
+        prefs.light_max = long(self.request.get('light_max'))
+        prefs.light_min = long(self.request.get('light_max'))
+        prefs.verylight_max = long(self.request.get('verylight_max'))
+        prefs.verylight_min = long(self.request.get('verylight_max'))
+        prefs.location = self.request.get('location')
+        prefs.put()
+        self.redirect('/')
+
+
+#########################################################
+# Post classes
+#########################################################
 class Clothes(webapp.RequestHandler):
     def post(self):
         num = int(self.request.get('num'))
@@ -196,6 +231,16 @@ class MarkDirty(webapp.RequestHandler):
         clothing.put()
         self.redirect('/')
 
+# TODO this method does nothing
+class NewRec(webapp.RequestHandler):
+    def post(self):
+        keys = self.request.get_all('keep')
+        for key in keys:
+            clothing = db.get(key)
+            clothing.put()
+        self.redirect('/')
+
+
 class Remove(webapp.RequestHandler):
     def post(self):
         key = self.request.get('key')
@@ -203,75 +248,10 @@ class Remove(webapp.RequestHandler):
         db.delete(clothing)
         self.redirect('/')
 
-class EditPage(webapp.RequestHandler):
-    def get(self):
-        key = self.request.get('k')
-        article = db.Model.get(key)
-        cat = article.cat
-        name = article.name
-        weight = article.weight
-        periods = {'1':'one', '2':'two', '3':'three', '4':'four', '10':'ten', '20':'twenty', '30':'thirty', '100':'onehundred', '200':'twohundred', '-1':'negativeone'}
-        period = periods[str(article.period)]
-        template_values = {
-            'name': name,
-            cat: True,
-            weight: True,
-            period: True,
-            'edit': 'Edit',
-            'value': '/edit',
-            'key': key,
-        }
-        for layer in article.layers:
-            template_values[layer] = True
-        for option in article.options:
-            template_values[option] = True
-        path = os.path.join(os.path.dirname(__file__), 'Templates/addItem.html')
-        self.response.out.write(template.render(path, template_values))
 
-    def post(self):
-        key = self.request.get('key')
-        clothing = db.get(key)
-        clothing.user = users.get_current_user()
-        clothing.cat = self.request.get('cat')
-        clothing.name = self.request.get('name')
-        clothing.weight = self.request.get('weight')
-        clothing.options = self.request.get_all('options')
-        clothing.layers = self.request.get_all('layers')
-        clothing.period = int(self.request.get('period'))
-        clothing.put()
-        self.redirect('/')
-
-class PrefPage(webapp.RequestHandler):
-    def get(self):
-        user = users.get_current_user()
-        url = users.create_logout_url(self.request.uri)
-        clothes = getAllClothes(user)
-        prefs = getPrefs(user)
-        template_values = {
-            'prefs': prefs,
-            'clothes': clothes,
-            'url': url,
-        }
-        path = os.path.join(os.path.dirname(__file__), 'Templates/prefs.html')
-        self.response.out.write(template.render(path, template_values))
-
-    def post(self):
-        user = users.get_current_user()
-        prefs = getPrefs(user)
-        prefs.veryheavy_max = long(self.request.get('veryheavy_max'))
-        prefs.veryheavy_min = long(self.request.get('veryheavy_min'))
-        prefs.heavy_max = long(self.request.get('heavy_max'))
-        prefs.heavy_min = long(self.request.get('heavy_max'))
-        prefs.medium_max = long(self.request.get('medium_max'))
-        prefs.medium_min = long(self.request.get('medium_max'))
-        prefs.light_max = long(self.request.get('light_max'))
-        prefs.light_min = long(self.request.get('light_max'))
-        prefs.verylight_max = long(self.request.get('verylight_max'))
-        prefs.verylight_min = long(self.request.get('verylight_max'))
-        prefs.location = self.request.get('location')
-        prefs.put()
-        self.redirect('/')
-
+#########################################################
+# Application def
+#########################################################
 application = webapp.WSGIApplication(
     [('/', MainPage),
      ('/cloth', Clothes),
@@ -286,9 +266,43 @@ application = webapp.WSGIApplication(
      ('/remove', Remove),
      ('/worn', MarkWorn),
      ('/wornOutfitWorn', MarkOutfitWorn),
+     ('/newRec', NewRec),
      ('/prefs', PrefPage)],
     debug=True)
 
+
+#########################################################
+# Model classes
+#########################################################
+class Clothing(db.Model):
+    name = db.StringProperty(multiline=False)
+    cat = db.StringProperty(multiline=False)
+    weight = db.StringProperty(multiline=False)
+    layers = db.StringListProperty()
+    options = db.StringListProperty()
+    period = db.IntegerProperty()
+    user = db.UserProperty()
+    numWorn = db.IntegerProperty()
+    clean = db.BooleanProperty()
+
+class Preferences(db.Model):
+    user = db.UserProperty()
+    veryheavy_max = db.IntegerProperty()
+    veryheavy_min = db.IntegerProperty()
+    heavy_max = db.IntegerProperty()
+    heavy_min = db.IntegerProperty()
+    medium_max = db.IntegerProperty()
+    medium_min = db.IntegerProperty()
+    light_max = db.IntegerProperty()
+    light_min = db.IntegerProperty()
+    verylight_max = db.IntegerProperty()
+    verylight_min = db.IntegerProperty()
+    location = db.StringProperty()
+
+
+#########################################################
+# Utility methods
+#########################################################
 def getPrefs(user):
     pquery = db.GqlQuery("SELECT * FROM Preferences where user= :1",user)
     prefs = pquery.get()  # gets the first one that matched
@@ -373,6 +387,22 @@ def getMainValues(user, temp):
     top = getOutfitTop(user, size)
     bottom = getOutfitBottom(user, size)
     return [prefs, size, dirty, top, bottom, bottom, top]
+
+def makePreferences(user):
+    prefs = Preferences()
+    prefs.user = user
+    prefs.veryheavy_max = 20
+    prefs.veryheavy_min = -100
+    prefs.heavy_max = 40
+    prefs.heavy_min = 25
+    prefs.medium_max = 60
+    prefs.medium_min = 40
+    prefs.light_max = 80
+    prefs.light_min = 55
+    prefs.verylight_max = 120
+    prefs.verylight_min = 70
+    prefs.location = "Austin"
+    return prefs
 
 def main():
     run_wsgi_app(application)
