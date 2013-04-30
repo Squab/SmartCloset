@@ -4,9 +4,9 @@ import time
 class weatherDataForecast:
 	wdf=''
 	city=''
-	def __init__(self):
+	def __init__(self, city='Austin'):
 		self.wdf=''
-		self.city='Austin'
+		self.city = city
 		self.getXML()
 	#Call getXML() to get the latest weather forecast before making any new decisions.
 	#Returns boolean value False if weather data is not retrieved, run again

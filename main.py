@@ -18,11 +18,13 @@ class MainPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-        w = weatherDataForecast()
+        prefs = getPrefs(user)
+        w = weatherDataForecast(prefs.location)
         w.getXML()    
         currentTemp = int(round(w.getCurrentTemp()))
         wind = int(round(w.getWindSpeed()))
         elements = getMainValues(user, currentTemp)
+        umbrella = "You might want to bring an umbrella today"
         template_values = {
             'url': url,
             'currentTemp': currentTemp,
@@ -33,6 +35,8 @@ class MainPage(webapp.RequestHandler):
             'dirty': elements.pop(),
             'size': elements.pop(),
         }
+        if w.getHumidity() > 75:
+            template_values['umbrella'] = umbrella
         path = os.path.join(os.path.dirname(__file__), 'Templates/index.html')
         self.response.out.write(template.render(path, template_values))
 
@@ -65,8 +69,9 @@ class AddItemPage(webapp.RequestHandler):
 class WeatherPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
-        url = users.create_logout_url(self.request.uri)    
-        w = weatherDataForecast()
+        url = users.create_logout_url(self.request.uri)  
+        prefs = getPrefs(user)  
+        w = weatherDataForecast(prefs.location)
         w.getXML()    
         temp = int(round(w.getCurrentTemp()))
         maxtemp = int(round(w.getMaxTemp()))
