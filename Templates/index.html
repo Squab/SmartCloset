@@ -9,9 +9,13 @@
     It is currently {{ currentTemp }}°F with a wind speed of {{ wind }} mph. 
     <br /><br /><br />
 
+    <b>Of your clean clothes, you should wear:</b>
+    <br /><br />
+
+
     <table border = 1>
       <tr>
-        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><td>Clean?</td><td>Edit link</td>
+        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td>
       </tr>
       <tr>
         {% for cloth in clothes %}
@@ -30,12 +34,6 @@
             <br />
             <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
             <td>{{ cloth.numWorn }} time(s)</td>
-            {% if cloth.clean %}
-                <td><a href='/dirty?k={{ cloth.key }}'>Mark Dirty<br /></td>
-            {% else %}
-                <td><a href='/clean?k={{ cloth.key }}'>Mark Clean<br /></td>
-            {% endif %}
-            <td><a href='/edit?k={{ cloth.key }}'>Edit</td>
           {% endfor %}
       </tr>
     </table><br />
