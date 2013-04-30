@@ -1,63 +1,25 @@
 <html>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
 <head>
     <link href='http://fonts.googleapis.com/css?family=Maven+Pro|Muli' rel='stylesheet' type='text/css'>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
     <title>Welcome to the Smart Closet</title>
 </head>
-<title>Fixed left-sidebar</title>
-<style type="text/css">
- body{
-  margin:0;
-  padding:0 0 0 <length>;
-  padding-left:<length>
- }
- 
- div#left-sidebar{
-  position:absolute;
-  top:90;
-  left:0;
-  width:20%;
-  height:50%;
- }
- @media screen{
-  body>div#left-sidebar{
-   position:fixed;
-  }
- }
- 
- * html body{
-  overflow:hidden;
- } 
- * html div#content{
-  height:100%;
-  overflow:auto;
- }
-</style>
-
-<div id="left-sidebar">
-<br /><br /><br /><br />
-    <a href="/closet">View Your Closet</a><br />
-    <a href="/addItem">Add an item to Your Closet</a><br />
-    <a href="/weather">Check the Weather</a><br />
-    <a href="/prefs">Set your Preferences</a><br />
-    <a href="{{ url }}">Logout</a></div>
-    
-<body>
 <h1>Welcome to your Smart Closet</h1>
-    Prepare for {{ currentTemp }}°F with a wind speed of {{ wind }} mph. 
+<body>
+    Prepare for {{ currentTemp }}°F with a wind speed of {{ wind }} mph.
     <br /><br /><br />
 
     <b>Of your clean clothes, you should wear:</b>
     <br /><br />
 
+
     <table border = 1>
       <form action="/newRec" method="post">
       <tr>
-        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><td><input type="submit" value="Give me a different one with these items in it"></td>
+        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><!--<td><input type="submit" value="Give me a different one with these items in it"></td>-->
       </tr>
       <tr>
-        <form action="/newRec" method="post">
+        <!--<form action="/newRec" method="post">-->
         {% for cloth in clothes %}
         {% if cloth %}
               <tr>
@@ -74,9 +36,9 @@
               {% endfor %}</font></td>
               <br />
               <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
-              <td>{{ cloth.numWorn }} time(s)</td>
-              <td><input type="checkbox" name="keep" value={{ cloth.key }} {% if keys.cloth == cloth %} checked {% endif %}></td>
-              </form>
+              <td>{{ cloth.numWorn }} time{% if cloth.numWorn != 1 %}s{% endif %}</td>
+              <!--<td><input type="checkbox" name="keep" value={{ cloth.key }} {% if keys.cloth == cloth %} checked {% endif %}></td>
+              </form>-->
           {% endif %}
           {% endfor %}
       </tr>
@@ -107,9 +69,13 @@
             {% for cloth in clothes %}
                 <input type="hidden" name="key" value={{ cloth.key }}>
             {% endfor %}
-            <input type="submit" value="I'm going to wear this outfit"> 
+            <input type="submit" value="I'm going to wear this outfit">
         </form>
         {% endif %}<br /><br />
+    <a href="/closet">View Your Closet</a><br />
+    <a href="/addItem">Add an item to Your Closet</a><br />
+    <a href="/weather">Check the Weather</a><br />
+    <a href="/prefs">Set your Preferences</a><br />
+    <a href="{{ url }}">Logout</a>
 </body>
 </html>
-

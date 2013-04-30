@@ -122,7 +122,7 @@ class EditPage(webapp.RequestHandler):
         clothing.layers = self.request.get_all('layers')
         clothing.period = int(self.request.get('period'))
         clothing.put()
-        self.redirect('/')
+        self.redirect('/closet')
 
 class PrefPage(webapp.RequestHandler):
     def get(self):
@@ -174,14 +174,14 @@ class Clothes(webapp.RequestHandler):
             clothing.numWorn = 0;
             clothing.clean = True;
             clothing.put()
-        self.redirect('/')
+        self.redirect('/closet')
 
 class Empty(webapp.RequestHandler):
     def post(self):
         user = users.get_current_user()
         clothes = getAllClothes(user)
         db.delete(clothes)
-        self.redirect('/')
+        self.redirect('/closet')
 
 class MarkOutfitWorn(webapp.RequestHandler):
     def post(self):
@@ -202,7 +202,7 @@ class MarkWorn(webapp.RequestHandler):
         if clothing.numWorn == clothing.period:
             clothing.clean = False
         clothing.put()
-        self.redirect('/')
+        self.redirect('/closet')
 
 class Laundry(webapp.RequestHandler):
     def post(self):
@@ -212,7 +212,7 @@ class Laundry(webapp.RequestHandler):
             cloth.clean = True
             cloth.numWorn = 0
             cloth.put()
-        self.redirect('/')
+        self.redirect('/closet')
 
 class MarkClean(webapp.RequestHandler):
     def post(self):
@@ -221,7 +221,7 @@ class MarkClean(webapp.RequestHandler):
         clothing.clean = True
         clothing.numWorn = 0
         clothing.put()
-        self.redirect('/')
+        self.redirect('/closet')
 
 class MarkDirty(webapp.RequestHandler):
     def post(self):
@@ -229,7 +229,7 @@ class MarkDirty(webapp.RequestHandler):
         clothing = db.get(key)
         clothing.clean = False
         clothing.put()
-        self.redirect('/')
+        self.redirect('/closet')
 
 # TODO this method does nothing
 class NewRec(webapp.RequestHandler):
@@ -246,7 +246,7 @@ class Remove(webapp.RequestHandler):
         key = self.request.get('key')
         clothing = db.get(key)
         db.delete(clothing)
-        self.redirect('/')
+        self.redirect('/closet')
 
 
 #########################################################
