@@ -72,7 +72,7 @@ class ClosetPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-        clothes = getCloset(user)
+        clothes = getAllClothes(user)
         template_values = {
             'clothes': clothes,
             'url': url,
@@ -84,7 +84,7 @@ class AddItemPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-        clothes = getCloset(user)
+        clothes = getAllClothes(user)
         template_values = {
             'clothes': clothes,
             'url': url,
@@ -129,8 +129,8 @@ class Clothes(webapp.RequestHandler):
         clothing.options = self.request.get_all('options')
         clothing.layers = self.request.get_all('layers')
         clothing.period = int(self.request.get('period'))
-        clothing.wornNum = 0;
-        clothes.clean = True;
+        clothing.numWorn = 0;
+        clothing.clean = True;
         clothing.put()
         self.redirect('/')
 
@@ -138,10 +138,30 @@ class Clothes(webapp.RequestHandler):
 class Empty(webapp.RequestHandler):
     def post(self):
         user = users.get_current_user()
-        clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
-        clothes = clothes_query.fetch(None)
+        clothes = getAllClothes(user)
         db.delete(clothes)
         self.redirect('/')
+
+class Laundry(webapp.RequestHandler):
+    def post(self):
+        user = users.get_current_user()
+        clothes = getDirtyClothes(user)
+        for cloth in clothes:
+            cloth.clean = True
+
+class MarkClean(webapp.RequestHandler):
+    def post(self):
+        user = users.get_current_user()
+        clothes = getDirtyClothes(user)
+        for cloth in clothes:
+            cloth.clean = True
+
+class MarkDirty(webapp.RequestHandler):
+    def post(self):
+        user = users.get_current_user()
+        clothes = getDirtyClothes(user)
+        for cloth in clothes:
+            cloth.clean = False
 
 class EditPage(webapp.RequestHandler):
     def get(self):
@@ -185,7 +205,7 @@ class PrefPage(webapp.RequestHandler):
     def get(self):
         user = users.get_current_user()
         url = users.create_logout_url(self.request.uri)
-        clothes = getCloset(user)
+        clothes = getAllClothes(user)
         prefs = getPrefs(user)
         template_values = {
             'prefs': prefs,
@@ -233,11 +253,23 @@ def getPrefs(user):
         prefs = makePreferences(user)
     return prefs
 
-def getCloset(user):
+def getAllClothes(user):
     clothes = Clothing.all().order('-user')
     clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1",user)
     clothes = clothes_query.fetch(None)
-    clothes
+    return clothes
+
+def getCleanClothes(user):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2", user, True)
+    clothes = clothes_query.fetch(None)
+    return clothes
+
+def getDirtyClothes(user):
+    clothes = Clothing.all().order('-user')
+    clothes_query = db.GqlQuery("SELECT * FROM Clothing where user= :1 AND clean= :2", user, False)
+    clothes = clothes_query.fetch(None)
+    return clothes
 
 def main():
     run_wsgi_app(application)
