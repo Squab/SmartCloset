@@ -151,17 +151,26 @@ class Laundry(webapp.RequestHandler):
 
 class MarkClean(webapp.RequestHandler):
     def post(self):
-        user = users.get_current_user()
-        clothes = getDirtyClothes(user)
-        for cloth in clothes:
-            cloth.clean = True
+        key = self.request.get('key')
+        clothing = db.get(key)
+        clothing.clean = True
+        clothing.put()
+        self.redirect('/')
 
 class MarkDirty(webapp.RequestHandler):
     def post(self):
-        user = users.get_current_user()
-        clothes = getDirtyClothes(user)
-        for cloth in clothes:
-            cloth.clean = False
+        key = self.request.get('key')
+        clothing = db.get(key)
+        clothing.clean = False
+        clothing.put()
+        self.redirect('/')
+
+class Remove(webapp.RequestHandler):
+    def post(self):
+        key = self.request.get('key')
+        clothing = db.get(key)
+        db.delete(clothing)
+        self.redirect('/')
 
 class EditPage(webapp.RequestHandler):
     def get(self):
@@ -232,8 +241,6 @@ class PrefPage(webapp.RequestHandler):
         prefs.put()
         self.redirect('/')
 
-
-
 application = webapp.WSGIApplication(
     [('/', MainPage),
      ('/cloth', Clothes),
@@ -242,9 +249,12 @@ application = webapp.WSGIApplication(
      ('/empty', Empty),
      ('/weather', WeatherPage),
      ('/edit', EditPage),
+     ('/laundry', Laundry),
+     ('/clean', MarkClean),
+     ('/dirty', MarkDirty),
+     ('/remove', Remove),
      ('/prefs', PrefPage)],
     debug=True)
-
 
 def getPrefs(user):
     pquery = db.GqlQuery("SELECT * FROM Preferences where user= :1",user)

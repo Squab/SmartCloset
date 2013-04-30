@@ -8,7 +8,7 @@
     <h1> Closet Contents</h1>
     <table border = 1>
       <tr>
-        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Options</td><td>Wash Period</td><td>Worn</td><td>Clean?</td><td>Edit link</td>
+        <td>Name</td><td>Type</td><td>Weight</td><td>Layers</td><td>Other</td><td>Wash Period</td><td>Worn</td><td>Clean?</td><td>Options</td>
       </tr>
       <tr>
         {% for cloth in clothes %}
@@ -24,26 +24,37 @@
             {% for option in cloth.options %}
               {{ option }}
             {% endfor %}</font></td>
-            <br />
             <td><font color = #D2E5FA> {{ cloth.period }} </font></td>
             <td>{{ cloth.numWorn }} time(s)</td>
             {% if cloth.clean %}
-                <td><a href='/dirty?k={{ cloth.key }}'>Mark Dirty<br /></td>
+                <td>{{ cloth.clean }}<br />
+                <form action="/dirty" method="post">
+                    <input type="hidden" name="key" value={{ cloth.key }}>
+                    <input type="submit" value="Mark Dirty">
+                </form><br /></td>
             {% else %}
-                <td><a href='/clean?k={{ cloth.key }}'>Mark Clean<br /></td>
+                <td>No!<br />
+                <form action="/clean" method="post">
+                    <input type="hidden" name="key" value={{ cloth.key }}>
+                    <input type="submit" value="Mark Clean">
+                </form><br /></td>
             {% endif %}
-            <td><a href='/edit?k={{ cloth.key }}'>Edit</td>
+            <td><a href='/edit?k={{ cloth.key }}'>Edit</a><br />
+            <form action="/remove" method="post">
+                    <input type="hidden" name="key" value={{ cloth.key }}>
+                    <input type="submit" value="Remove">
+                </form></td>
           {% endfor %}
       </tr>
     </table><br />
     <form action="/empty" method="post">
       <div><input type="submit" value="Remove all from closet"></div> 
     </form><br />
-    <a href="/">Home</ a><br />
-    <a href="/addItem">Add and item to Your Closet</ a><br />
+    <a href="/">Home</a><br />
+    <a href="/addItem">Add and item to Your Closet</a><br />
     <a href="/weather">Check the Weather</a><br />
     <a href="/prefs">Set your Preferences</a><br />		
-    <a href="{{ url }}">Logout</ a>
+    <a href="{{ url }}">Logout</a>
   </body>
 </html>
 
