@@ -1,0 +1,33 @@
+from google.appengine.ext import db
+
+class Clothing(db.Model):
+    name = db.StringProperty(multiline=False)
+    cat = db.StringProperty(multiline=False)
+    weight = db.StringProperty(multiline=False)
+    layers = db.StringListProperty()
+    options = db.StringListProperty()
+    period = db.IntegerProperty()
+    user = db.UserProperty()
+    numWorn = db.IntegerProperty()
+    clean = db.BooleanProperty()
+
+class Preferences(db.Model):
+    user = db.UserProperty()
+    veryheavy_max = db.IntegerProperty()
+    veryheavy_min = db.IntegerProperty()
+    heavy_max = db.IntegerProperty()
+    heavy_min = db.IntegerProperty()
+    medium_max = db.IntegerProperty()
+    medium_min = db.IntegerProperty()
+    light_max = db.IntegerProperty()
+    light_min = db.IntegerProperty()
+    verylight_max = db.IntegerProperty()
+    verylight_min = db.IntegerProperty()
+    location = db.StringProperty()
+    vll = db.IntegerProperty()
+    lm = db.IntegerProperty()
+    mh = db.IntegerProperty()
+    hvh = db.IntegerProperty()
+    favType = db.StringProperty()
+    secondFavType = db.StringProperty()
+    warmth = db.IntegerProperty()
